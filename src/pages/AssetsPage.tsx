@@ -1,0 +1,256 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Plus, MoreHorizontal, Search } from "lucide-react";
+import { useAssets, useDeleteAsset } from "@/hooks/useAssets";
+import { useProjects } from "@/hooks/useOrganization";
+import { formatDate, daysUntil, initials } from "@/lib/date";
+import { ASSET_TYPE_LABEL, ASSET_STATUS_DISPLAY, type AssetType, type AssetStatus } from "@/types";
+
+const tabs: { label: string; type?: AssetType }[] = [
+  { label: "Tümü" },
+  { label: "Alan Adları", type: "DOMAIN" },
+  { label: "SSL", type: "SSL_CERTIFICATE" },
+  { label: "Sunucular", type: "SERVER" },
+  { label: "Hosting", type: "HOSTING_SERVICE" },
+  { label: "Lisanslar", type: "LICENSE" },
+  { label: "CDN", type: "CDN_SERVICE" },
+];
+
+const typeColors: Record<string, string> = {
+  DOMAIN: "text-primary",
+  SSL_CERTIFICATE: "text-info",
+  SERVER: "text-info",
+  LICENSE: "text-warning",
+  CDN_SERVICE: "text-success",
+  HOSTING_SERVICE: "text-info",
+  CUSTOM: "text-muted-foreground",
+};
+
+const STATUS_TR: Record<string, string> = {
+  ACTIVE: "Aktif",
+  EXPIRING_SOON: "Yakında Sona Eriyor",
+  EXPIRED: "Süresi Doldu",
+  CANCELLED: "İptal Edildi",
+  ARCHIVED: "Arşivlendi",
+};
+
+export default function AssetsPage() {
+  const [activeTab, setActiveTab] = useState("Tümü");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [projectFilter, setProjectFilter] = useState("");
+
+  const activeType = tabs.find((t) => t.label === activeTab)?.type;
+  const queryParams: Record<string, string> = {};
+  if (activeType) queryParams.assetType = activeType;
+  if (statusFilter) queryParams.status = statusFilter;
+
+  const { data: assets = [], isLoading } = useAssets(Object.keys(queryParams).length ? queryParams : undefined);
+  const { data: projects = [] } = useProjects();
+  const deleteAsset = useDeleteAsset();
+
+  const filtered = assets.filter((a) => {
+    if (search) {
+      const q = search.toLowerCase();
+      if (!a.name.toLowerCase().includes(q) && !(a.vendorName ?? "").toLowerCase().includes(q)) return false;
+    }
+    if (projectFilter && a.projectId !== projectFilter) return false;
+    return true;
+  });
+
+  return (
+    <div className="space-y-4 md:space-y-6">
+      {/* Üst bar */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-0 border-b border-border overflow-x-auto scrollbar-none flex-1 min-w-0">
+          {tabs.map((tab) => (
+            <button
+              key={tab.label}
+              onClick={() => setActiveTab(tab.label)}
+              className={`text-sm font-medium px-3 md:px-4 py-2.5 border-b-2 transition-colors duration-150 whitespace-nowrap flex-shrink-0 ${
+                activeTab === tab.label
+                  ? "text-foreground border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
+            >
+              {tab.label}{" "}
+              <span className="text-[10px] tabular-nums opacity-60">
+                {tab.type ? assets.filter((a) => a.assetType === tab.type).length : assets.length}
+              </span>
+            </button>
+          ))}
+        </div>
+        <Link
+          to="/assets/new"
+          className="bg-primary text-primary-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 flex items-center gap-2 flex-shrink-0"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="hidden sm:inline">Varlık Ekle</span>
+        </Link>
+      </div>
+
+      {/* Filtreler + Tablo */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="p-3 md:p-4 border-b border-border flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-between">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+              <input
+                type="text"
+                placeholder="Ara..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="text-sm border border-border rounded-lg pl-9 pr-4 py-1.5 w-48 md:w-64 bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors duration-150"
+              />
+            </div>
+            <select
+              value={projectFilter}
+              onChange={(e) => setProjectFilter(e.target.value)}
+              className="text-sm border border-border rounded-lg px-3 py-1.5 bg-secondary text-muted-foreground"
+            >
+              <option value="">Tüm Projeler</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="text-sm border border-border rounded-lg px-3 py-1.5 bg-secondary text-muted-foreground"
+            >
+              <option value="">Tüm Durumlar</option>
+              <option value="ACTIVE">Aktif</option>
+              <option value="EXPIRING_SOON">Yakında Sona Eriyor</option>
+              <option value="EXPIRED">Süresi Doldu</option>
+              <option value="ARCHIVED">Arşivlendi</option>
+            </select>
+          </div>
+          <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">
+            {isLoading ? "Yükleniyor…" : `${filtered.length} / ${assets.length} varlık`}
+          </span>
+        </div>
+
+        {/* Masaüstü tablo */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="px-5 py-3 w-4"><input type="checkbox" className="rounded border-border accent-primary" /></th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Varlık Adı</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Tür</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Tedarikçi</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Proje</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Yenileme Tarihi</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Fiyat</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Durum</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Sahip</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground text-right">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">Varlıklar yükleniyor…</td></tr>}
+              {!isLoading && filtered.length === 0 && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">Varlık bulunamadı.</td></tr>}
+              {filtered.map((asset) => {
+                const st = ASSET_STATUS_DISPLAY[asset.status as AssetStatus] ?? ASSET_STATUS_DISPLAY.ACTIVE;
+                const days = daysUntil(asset.renewalDate);
+                const ownerInitials = asset.assignedUser ? initials(asset.assignedUser.fullName) : "—";
+                const price = asset.priceAmount ? `${asset.priceCurrency} ${parseFloat(asset.priceAmount).toFixed(2)}` : "—";
+                return (
+                  <tr key={asset.id} className="border-b border-border last:border-0 hover:bg-secondary/50 transition-colors duration-150 h-[52px]">
+                    <td className="px-5 py-3"><input type="checkbox" className="rounded border-border accent-primary" /></td>
+                    <td className="px-5 py-3">
+                      <Link to={`/assets/${asset.id}`} className="text-sm font-medium text-foreground hover:text-primary transition-colors duration-150">{asset.name}</Link>
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[asset.assetType] || "text-muted-foreground"}`}>
+                        {ASSET_TYPE_LABEL[asset.assetType] ?? asset.assetType}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground">{asset.vendorName ?? "—"}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground">{asset.project?.name ?? "—"}</td>
+                    <td className="px-5 py-3">
+                      <span className="text-sm tabular-nums text-foreground font-mono">{formatDate(asset.renewalDate)}</span>
+                      {days <= 30 && (
+                        <p className={`text-[10px] tabular-nums ${days < 0 ? "text-destructive" : days <= 7 ? "text-destructive" : "text-warning"}`}>
+                          {days < 0 ? `${Math.abs(days)}g geçti` : `${days}g kaldı`}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-5 py-3 text-sm font-medium tabular-nums text-foreground">{price}</td>
+                    <td className="px-5 py-3">
+                      <span className="flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
+                        <span className={`text-xs ${st.text}`}>{STATUS_TR[asset.status] ?? asset.status}</span>
+                      </span>
+                    </td>
+                    <td className="px-5 py-3">
+                      <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-semibold text-foreground" title={asset.assignedUser?.fullName}>
+                        {ownerInitials}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <button onClick={() => { if (confirm(`"${asset.name}" silinsin mi?`)) deleteAsset.mutate(asset.id); }} className="text-muted-foreground hover:text-foreground transition-colors duration-150">
+                        <MoreHorizontal className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobil kart listesi */}
+        <div className="md:hidden divide-y divide-border">
+          {isLoading && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Varlıklar yükleniyor…</p>}
+          {!isLoading && filtered.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Varlık bulunamadı.</p>}
+          {filtered.map((asset) => {
+            const st = ASSET_STATUS_DISPLAY[asset.status as AssetStatus] ?? ASSET_STATUS_DISPLAY.ACTIVE;
+            const days = daysUntil(asset.renewalDate);
+            const price = asset.priceAmount ? `${asset.priceCurrency} ${parseFloat(asset.priceAmount).toFixed(2)}` : null;
+            return (
+              <div key={asset.id} className="p-4 hover:bg-secondary/30 transition-colors">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="min-w-0">
+                    <Link to={`/assets/${asset.id}`} className="text-sm font-medium text-foreground hover:text-primary transition-colors truncate block">
+                      {asset.name}
+                    </Link>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[asset.assetType] || "text-muted-foreground"}`}>
+                        {ASSET_TYPE_LABEL[asset.assetType] ?? asset.assetType}
+                      </span>
+                      {asset.vendorName && <span className="text-[10px] text-muted-foreground">· {asset.vendorName}</span>}
+                    </div>
+                  </div>
+                  <span className="flex items-center gap-1.5 flex-shrink-0">
+                    <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
+                    <span className={`text-xs ${st.text}`}>{STATUS_TR[asset.status] ?? asset.status}</span>
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="font-mono">{formatDate(asset.renewalDate)}</span>
+                  <div className="flex items-center gap-3">
+                    {price && <span className="font-medium text-foreground">{price}</span>}
+                    {days <= 30 && (
+                      <span className={`font-medium ${days < 0 ? "text-destructive" : days <= 7 ? "text-destructive" : "text-warning"}`}>
+                        {days < 0 ? `${Math.abs(days)}g geçti` : `${days}g kaldı`}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="px-4 md:px-5 py-3 border-t border-border flex items-center justify-between">
+          <span className="text-[11px] text-muted-foreground tabular-nums">{filtered.length} varlık</span>
+          <div className="flex items-center gap-2">
+            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150 disabled:opacity-40" disabled>Önceki</button>
+            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150">Sonraki</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
