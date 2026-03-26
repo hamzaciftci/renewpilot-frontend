@@ -9,23 +9,15 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { formatDate, daysUntil, daysColor, timeAgo } from "@/lib/date";
 import { ASSET_TYPE_LABEL } from "@/types";
 
-const chartData = [
-  { month: "Eki", value: 4 },
-  { month: "Kas", value: 6 },
-  { month: "Ara", value: 3 },
-  { month: "Oca", value: 8 },
-  { month: "Şub", value: 5 },
-  { month: "Mar", value: 7 },
-];
-
-const breakdownData = [
-  { name: "Alan Adları", value: 42, pct: 29, color: "bg-primary" },
-  { name: "Sunucular", value: 31, pct: 21, color: "bg-info" },
-  { name: "SSL", value: 28, pct: 19, color: "bg-success" },
-  { name: "Hosting", value: 22, pct: 15, color: "bg-warning" },
-  { name: "Lisanslar", value: 15, pct: 10, color: "bg-destructive" },
-  { name: "CDN", value: 9, pct: 6, color: "bg-muted-foreground" },
-];
+const TYPE_COLORS: Record<string, string> = {
+  DOMAIN: "bg-primary",
+  SSL_CERTIFICATE: "bg-success",
+  SERVER: "bg-info",
+  HOSTING_SERVICE: "bg-warning",
+  LICENSE: "bg-destructive",
+  CDN_SERVICE: "bg-muted-foreground",
+  CUSTOM: "bg-muted-foreground",
+};
 
 const typeColors: Record<string, string> = {
   DOMAIN: "text-primary",
@@ -58,11 +50,23 @@ export default function DashboardPage() {
     .slice(0, 5)
     .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime());
 
+  const chartData = (summary?.activityByMonth ?? []).map((m) => ({
+    month: m.month,
+    value: m.count,
+  }));
+
+  const breakdownData = (summary?.assetsByType ?? []).map((a) => ({
+    name: ASSET_TYPE_LABEL[a.type] ?? a.type,
+    value: a.count,
+    pct: a.pct,
+    color: TYPE_COLORS[a.type] ?? "bg-muted-foreground",
+  }));
+
   const stats = [
-    { label: "TOPLAM VARLIK", value: String(summary?.total ?? "—"), icon: Layers, color: "text-primary", sub: "↑ Bu ay 8 eklendi", subColor: "text-success" },
+    { label: "TOPLAM VARLIK", value: String(summary?.total ?? "—"), icon: Layers, color: "text-primary", sub: "Tüm aktif varlıklar", subColor: "text-muted-foreground" },
     { label: "7 GÜNDE SONA ERİYOR", value: String(summary?.expiringIn7Days ?? "—"), icon: Clock, color: "text-warning", valueColor: (summary?.expiringIn7Days ?? 0) > 0 ? "text-warning" : undefined, sub: "Dikkat gerektirir", subColor: "text-muted-foreground" },
     { label: "SÜRESİ GEÇMİŞ", value: String(summary?.expired ?? "—"), icon: AlertCircle, color: "text-destructive", valueColor: (summary?.expired ?? 0) > 0 ? "text-destructive" : undefined, sub: "Hemen işlem yapılmalı", subColor: "text-muted-foreground" },
-    { label: "BU AY YENİLENDİ", value: "—", icon: CheckCircle, color: "text-success", sub: "—", subColor: "text-muted-foreground" },
+    { label: "BU AY YENİLENDİ", value: String(summary?.renewedThisMonth ?? "—"), icon: CheckCircle, color: "text-success", valueColor: (summary?.renewedThisMonth ?? 0) > 0 ? "text-success" : undefined, sub: "Bu ay tamamlanan yenilemeler", subColor: "text-muted-foreground" },
   ];
 
   const recentNotifications = notifications.slice(0, 5);
@@ -90,7 +94,6 @@ export default function DashboardPage() {
           <button className="text-xs font-medium text-primary hover:text-primary/80 transition-colors">Tümünü gör →</button>
         </div>
         <div className="bg-card border border-border rounded-xl overflow-hidden">
-          {/* Masaüstü tablo */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -141,7 +144,6 @@ export default function DashboardPage() {
             </table>
           </div>
 
-          {/* Mobil kart listesi */}
           <div className="md:hidden divide-y divide-border">
             {attentionItems.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Dikkat gerektiren varlık yok.</p>}
             {attentionItems.map((row) => {
@@ -178,40 +180,48 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground mt-0.5">Son 6 ay</p>
           </div>
           <div className="h-[180px] md:h-[220px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-                <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                  {chartData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={index === chartData.length - 1 ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.3)"} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            {chartData.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-sm text-muted-foreground">Henüz yenileme yok.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} allowDecimals={false} />
+                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Bar dataKey="value" name="Yenileme" radius={[4, 4, 0, 0]}>
+                    {chartData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={index === chartData.length - 1 ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.3)"} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
         <div className="lg:col-span-2 bg-card border border-border rounded-xl p-4 md:p-5">
           <h3 className="text-sm font-medium text-foreground mb-4 md:mb-5">Türe Göre Varlıklar</h3>
-          <div className="space-y-3">
-            {breakdownData.map((d) => (
-              <div key={d.name} className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{d.name}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-foreground tabular-nums">{d.value}</span>
-                    <span className="text-[10px] text-muted-foreground tabular-nums">{d.pct}%</span>
+          {breakdownData.length === 0 ? (
+            <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">Henüz varlık yok.</div>
+          ) : (
+            <div className="space-y-3">
+              {breakdownData.map((d) => (
+                <div key={d.name} className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{d.name}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-foreground tabular-nums">{d.value}</span>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">{d.pct}%</span>
+                    </div>
+                  </div>
+                  <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${d.color}`} style={{ width: `${Math.max(d.pct, 3)}%` }} />
                   </div>
                 </div>
-                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${d.color}`} style={{ width: `${d.pct * 3}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

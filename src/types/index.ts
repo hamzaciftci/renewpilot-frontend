@@ -131,6 +131,9 @@ export interface RenewalSummary {
   expired: number;
   expiringIn7Days: number;
   expiringIn30Days: number;
+  renewedThisMonth: number;
+  activityByMonth: { month: string; year: number; count: number }[];
+  assetsByType: { type: string; count: number; pct: number }[];
 }
 
 export interface RenewalEvent {

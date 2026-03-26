@@ -203,4 +203,7 @@ export const notificationsApi = {
 
   unreadCount: (orgId: string) =>
     api.get<{ count: number }>(`/organizations/${orgId}/notifications/unread-count`),
+
+  markRead: (orgId: string, notificationId: string) =>
+    api.patch<void>(`/organizations/${orgId}/notifications/${notificationId}/read`),
 };

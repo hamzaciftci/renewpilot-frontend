@@ -1,29 +1,20 @@
-import { useState } from "react";
 import { Bell, Mail, Smartphone } from "lucide-react";
+import { useState } from "react";
+import { useNotifications, useMarkNotificationRead } from "@/hooks/useNotifications";
+import { timeAgo } from "@/lib/date";
 
-interface Notification {
-  id: string;
-  icon: typeof Bell;
-  message: string;
-  channel: "EMAIL" | "PUSH" | "SMS";
-  time: string;
-  read: boolean;
-  asset: string;
-}
-
-const notifications: Notification[] = [
-  { id: "1", icon: Bell, message: "clientsite.com 2 gün içinde yenileniyor", channel: "PUSH", time: "10 dk önce", read: false, asset: "clientsite.com" },
-  { id: "2", icon: Mail, message: "Hatırlatıcı gönderildi: *.example.com SSL 6 gün içinde sona eriyor", channel: "EMAIL", time: "2 saat önce", read: false, asset: "*.example.com" },
-  { id: "3", icon: Bell, message: "VPS Production #1 12 gün içinde yenileniyor", channel: "PUSH", time: "5 saat önce", read: false, asset: "VPS Production #1" },
-  { id: "4", icon: Mail, message: "clientapp.com başarıyla yenilendi", channel: "EMAIL", time: "Dün", read: true, asset: "clientapp.com" },
-  { id: "5", icon: Smartphone, message: "staging-server.io süresi geçti — işlem gerekli", channel: "SMS", time: "2 gün önce", read: true, asset: "staging-server.io" },
-  { id: "6", icon: Mail, message: "Şubat ayı yenileme özeti", channel: "EMAIL", time: "3 gün önce", read: true, asset: "" },
-];
+const channelIcons: Record<string, typeof Bell> = {
+  EMAIL: Mail,
+  PUSH: Bell,
+  SMS: Smartphone,
+  WHATSAPP: Smartphone,
+};
 
 const channelColors: Record<string, string> = {
   EMAIL: "text-primary",
   PUSH: "text-warning",
   SMS: "text-success",
+  WHATSAPP: "text-success",
 };
 
 const prefItems = [
@@ -34,19 +25,21 @@ const prefItems = [
 ];
 
 export default function NotificationsPage() {
-  const [tab, setTab] = useState<"all" | "unread" | "sent">("all");
-  const [items, setItems] = useState(notifications);
+  const [tab, setTab] = useState<"all" | "unread">("all");
+  const { data: notifications = [], isLoading } = useNotifications();
+  const markRead = useMarkNotificationRead();
 
-  const filtered = tab === "unread" ? items.filter((n) => !n.read) : items;
-  const unreadCount = items.filter((n) => !n.read).length;
+  const isRead = (n: (typeof notifications)[number]) =>
+    n.status === "READ" || !!n.readAt;
 
-  const markRead = (id: string) => setItems(items.map((n) => n.id === id ? { ...n, read: true } : n));
+  const filtered = tab === "unread" ? notifications.filter((n) => !isRead(n)) : notifications;
+  const unreadCount = notifications.filter((n) => !isRead(n)).length;
 
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Tabs */}
       <div className="flex items-center gap-0 border-b border-border">
-        {([["all", "Tümü"], ["unread", `Okunmamış (${unreadCount})`], ["sent", "Gönderilenler"]] as const).map(([key, label]) => (
+        {([["all", "Tümü"], ["unread", `Okunmamış (${unreadCount})`]] as const).map(([key, label]) => (
           <button
             key={key}
             onClick={() => setTab(key)}
@@ -61,32 +54,51 @@ export default function NotificationsPage() {
 
       {/* List */}
       <div className="space-y-1">
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className="bg-card border border-border rounded-xl p-12 text-center text-sm text-muted-foreground">
+            Yükleniyor...
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="bg-card border border-border rounded-xl p-12 text-center">
             <Bell className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" strokeWidth={1.5} />
-            <p className="text-sm text-muted-foreground">Hepsi tamam! Yeni bildirim yok.</p>
+            <p className="text-sm text-muted-foreground">
+              {tab === "unread" ? "Okunmamış bildirim yok." : "Henüz bildirim yok."}
+            </p>
           </div>
         ) : (
-          filtered.map((n) => (
-            <div
-              key={n.id}
-              className={`bg-card border border-border rounded-lg p-4 flex items-center gap-4 transition-colors duration-150 ${
-                !n.read ? "border-l-2 border-l-primary" : ""
-              }`}
-            >
-              <n.icon className={`w-4 h-4 flex-shrink-0 ${!n.read ? "text-foreground" : "text-muted-foreground"}`} strokeWidth={1.5} />
-              <div className="flex-1 min-w-0">
-                <p className={`text-sm ${!n.read ? "font-medium text-foreground" : "text-muted-foreground"}`}>{n.message}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{n.time}</p>
+          filtered.map((n) => {
+            const read = isRead(n);
+            const Icon = channelIcons[n.channel] ?? Bell;
+            return (
+              <div
+                key={n.id}
+                className={`bg-card border border-border rounded-lg p-4 flex items-center gap-4 transition-colors duration-150 ${
+                  !read ? "border-l-2 border-l-primary" : ""
+                }`}
+              >
+                <Icon className={`w-4 h-4 flex-shrink-0 ${!read ? "text-foreground" : "text-muted-foreground"}`} strokeWidth={1.5} />
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm ${!read ? "font-medium text-foreground" : "text-muted-foreground"}`}>
+                    {n.body ?? n.subject ?? n.notificationType}
+                    {(n as any).asset && <span className="text-muted-foreground"> — {(n as any).asset.name}</span>}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{timeAgo(n.createdAt)}</p>
+                </div>
+                <span className={`text-[10px] font-mono font-semibold ${channelColors[n.channel] ?? "text-muted-foreground"}`}>
+                  {n.channel}
+                </span>
+                {!read && (
+                  <button
+                    onClick={() => markRead.mutate(n.id)}
+                    disabled={markRead.isPending}
+                    className="text-xs text-primary font-medium hover:text-primary/80 whitespace-nowrap transition-colors duration-150 disabled:opacity-50"
+                  >
+                    Okundu
+                  </button>
+                )}
               </div>
-              <span className={`text-[10px] font-mono font-semibold ${channelColors[n.channel]}`}>{n.channel}</span>
-              {!n.read && (
-                <button onClick={() => markRead(n.id)} className="text-xs text-primary font-medium hover:text-primary/80 whitespace-nowrap transition-colors duration-150">
-                  Okundu işaretle
-                </button>
-              )}
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
