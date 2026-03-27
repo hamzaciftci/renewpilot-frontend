@@ -184,6 +184,45 @@ export interface TeamMember {
   };
 }
 
+// ─── Notifications Preferences ───────────────────────────────────────────────
+
+export interface NotificationPreferences {
+  emailEnabled: boolean;
+  pushEnabled: boolean;
+  smsEnabled: boolean;
+  whatsappEnabled: boolean;
+  quietHoursStart: number;
+  quietHoursEnd: number;
+}
+
+// ─── Billing ──────────────────────────────────────────────────────────────────
+
+export interface Plan {
+  id: string;
+  code: "FREE" | "PRO" | "AGENCY" | "ENTERPRISE";
+  name: string;
+  monthlyPrice: string;
+  yearlyPrice: string;
+  currency: string;
+  maxAssets: number;
+  maxTeamMembers: number;
+  channels: string[];
+  features: string[];
+  isActive: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  organizationId: string;
+  planId: string;
+  status: "TRIALING" | "ACTIVE" | "PAST_DUE" | "CANCELLED" | "INCOMPLETE";
+  billingInterval: "MONTHLY" | "YEARLY";
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  plan: Plan;
+}
+
 // ─── UI Helpers ───────────────────────────────────────────────────────────────
 
 /** Maps backend AssetType → short display label */

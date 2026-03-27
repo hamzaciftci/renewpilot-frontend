@@ -100,6 +100,9 @@ export const api = {
   patch: <T>(path: string, body?: unknown) =>
     request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
 
+  put: <T>(path: string, body?: unknown) =>
+    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
+
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
 
@@ -115,6 +118,12 @@ export const authApi = {
   me: () => api.get<import("@/types").AuthUser>("/auth/me"),
 
   logout: () => api.post<void>("/auth/logout"),
+
+  updateProfile: (body: { fullName?: string; timezone?: string; locale?: string; avatarUrl?: string }) =>
+    api.patch<import("@/types").AuthUser>("/auth/me", body),
+
+  changePassword: (body: { currentPassword: string; newPassword: string }) =>
+    api.post<{ message: string }>("/auth/change-password", body),
 };
 
 // ─── Organization endpoints ───────────────────────────────────────────────────
@@ -133,6 +142,15 @@ export const orgsApi = {
 
   members: (orgId: string) =>
     api.get<import("@/types").TeamMember[]>(`/organizations/${orgId}/members`),
+
+  inviteMember: (orgId: string, body: { email: string; role?: string }) =>
+    api.post<import("@/types").TeamMember>(`/organizations/${orgId}/members/invite`, body),
+
+  updateMemberRole: (orgId: string, userId: string, role: string) =>
+    api.patch<import("@/types").TeamMember>(`/organizations/${orgId}/members/${userId}/role`, { role }),
+
+  removeMember: (orgId: string, userId: string) =>
+    api.delete<{ message: string }>(`/organizations/${orgId}/members/${userId}`),
 };
 
 // ─── Projects endpoints ───────────────────────────────────────────────────────
@@ -206,4 +224,20 @@ export const notificationsApi = {
 
   markRead: (orgId: string, notificationId: string) =>
     api.patch<void>(`/organizations/${orgId}/notifications/${notificationId}/read`),
+
+  getPreferences: (orgId: string) =>
+    api.get<import("@/types").NotificationPreferences>(`/organizations/${orgId}/notifications/preferences`),
+
+  updatePreferences: (orgId: string, body: Partial<import("@/types").NotificationPreferences>) =>
+    api.put<import("@/types").NotificationPreferences>(`/organizations/${orgId}/notifications/preferences`, body),
+};
+
+// ─── Billing endpoints ────────────────────────────────────────────────────────
+
+export const billingApi = {
+  getPlans: (orgId: string) =>
+    api.get<import("@/types").Plan[]>(`/organizations/${orgId}/billing/plans`),
+
+  getSubscription: (orgId: string) =>
+    api.get<import("@/types").Subscription | null>(`/organizations/${orgId}/billing/subscription`),
 };

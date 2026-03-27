@@ -1,64 +1,131 @@
-import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-
-const details = {
-  name: "clientsite.com",
-  type: "DOMAIN",
-  status: "EXPIRING SOON",
-  vendor: "GoDaddy",
-  project: "Acme Corp Website",
-  renewalDate: "March 18, 2026",
-  daysRemaining: 2,
-  price: "$14.99",
-  interval: "year",
-  autoRenew: false,
-  assignedTo: "Hamza Yılmaz",
-  notes: "Primary domain for client. Renew before campaign launch.",
-  created: "Jan 12, 2025",
-};
-
-const timeline = [
-  { date: "Mar 16, 2026", text: "Reminder sent (email + push)", type: "reminder" },
-  { date: "Jan 12, 2025", text: "Created in RenewPilot", type: "created" },
-  { date: "Mar 18, 2025", text: "Renewed by Hamza Yılmaz — $14.99", type: "renewed" },
-  { date: "Mar 18, 2024", text: "First tracked renewal", type: "renewed" },
-];
-
-const typeColors: Record<string, string> = {
-  DOMAIN: "text-primary",
-  SSL: "text-info",
-  SERVER: "text-info",
-  LICENSE: "text-warning",
-};
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ChevronRight, Pencil, Check, Trash2, X } from "lucide-react";
+import { toast } from "sonner";
+import { useAsset, useAssetHistory, useUpdateAsset, useDeleteAsset } from "@/hooks/useAssets";
+import { useRenewAsset } from "@/hooks/useRenewals";
+import { ASSET_TYPE_LABEL, ASSET_STATUS_DISPLAY } from "@/types";
+import { formatDate, daysUntil, daysColor, initials } from "@/lib/date";
 
 export default function AssetDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: asset, isLoading } = useAsset(id!);
+  const { data: history = [] } = useAssetHistory(id!);
+  const renewAsset = useRenewAsset();
+  const updateAsset = useUpdateAsset(id!);
+  const deleteAsset = useDeleteAsset();
+
+  const [editMode, setEditMode] = useState(false);
+  const [editFields, setEditFields] = useState({ notes: "", vendorName: "" });
+
+  const handleEdit = () => {
+    if (!asset) return;
+    setEditFields({ notes: asset.notes ?? "", vendorName: asset.vendorName ?? "" });
+    setEditMode(true);
+  };
+
+  const handleSave = async () => {
+    await updateAsset.mutateAsync(editFields);
+    toast.success("Asset updated");
+    setEditMode(false);
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this asset?")) return;
+    await deleteAsset.mutateAsync(id!);
+    toast.success("Asset deleted");
+    navigate("/assets");
+  };
+
+  const handleRenew = async () => {
+    await renewAsset.mutateAsync({ assetId: id! });
+    toast.success("Asset marked as renewed");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4 max-w-6xl animate-pulse">
+        <div className="h-4 bg-secondary rounded w-48" />
+        <div className="h-8 bg-secondary rounded w-64" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 h-64 bg-secondary rounded-xl" />
+          <div className="h-48 bg-secondary rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!asset) {
+    return (
+      <div className="max-w-6xl">
+        <p className="text-muted-foreground">Asset not found.</p>
+        <Link to="/assets" className="text-primary text-sm mt-2 inline-block">← Back to Assets</Link>
+      </div>
+    );
+  }
+
+  const days = daysUntil(asset.renewalDate);
+  const colors = daysColor(days);
+  const statusDisplay = ASSET_STATUS_DISPLAY[asset.status];
+  const typeLabel = ASSET_TYPE_LABEL[asset.assetType];
+
   return (
     <div className="space-y-4 md:space-y-6 max-w-6xl">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link to="/assets" className="hover:text-foreground transition-colors duration-150">Assets</Link>
         <ChevronRight className="w-3 h-3 flex-shrink-0" />
-        <span className="text-foreground font-medium truncate">{details.name}</span>
+        <span className="text-foreground font-medium truncate">{asset.name}</span>
       </div>
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2 md:gap-3">
-          <h1 className="text-xl font-semibold text-foreground">{details.name}</h1>
-          <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[details.type] || "text-muted-foreground"}`}>
-            {details.type}
-          </span>
+          <h1 className="text-xl font-semibold text-foreground">{asset.name}</h1>
+          <span className="text-[10px] font-mono font-semibold uppercase text-primary">{typeLabel}</span>
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-warning" />
-            <span className="text-xs text-warning font-medium">{details.status}</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${statusDisplay.dot}`} />
+            <span className={`text-xs font-medium ${statusDisplay.text}`}>{asset.status.replace("_", " ")}</span>
           </span>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          <button className="text-sm font-medium text-success hover:bg-success/10 px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex-1 sm:flex-none">
-            Mark Renewed
+          <button
+            onClick={handleRenew}
+            disabled={renewAsset.isPending}
+            className="text-sm font-medium text-success hover:bg-success/10 px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex items-center gap-1.5 flex-1 sm:flex-none disabled:opacity-50"
+          >
+            <Check className="w-3.5 h-3.5" />
+            {renewAsset.isPending ? "Renewing..." : "Mark Renewed"}
           </button>
-          <button className="text-sm font-medium text-foreground hover:bg-secondary px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex-1 sm:flex-none">
-            Edit Asset
+          {editMode ? (
+            <>
+              <button
+                onClick={handleSave}
+                disabled={updateAsset.isPending}
+                className="text-sm font-medium text-success hover:bg-success/10 px-3 py-2 rounded-lg border border-border transition-colors duration-150 flex-1 sm:flex-none"
+              >
+                {updateAsset.isPending ? "Saving..." : "Save"}
+              </button>
+              <button onClick={() => setEditMode(false)} className="text-sm text-muted-foreground hover:text-foreground px-3 py-2 rounded-lg border border-border transition-colors duration-150">
+                <X className="w-4 h-4" />
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={handleEdit}
+              className="text-sm font-medium text-foreground hover:bg-secondary px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex items-center gap-1.5 flex-1 sm:flex-none"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit
+            </button>
+          )}
+          <button
+            onClick={handleDelete}
+            className="text-sm font-medium text-destructive hover:bg-destructive/10 px-3 py-2 rounded-lg border border-border transition-colors duration-150"
+          >
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -71,70 +138,119 @@ export default function AssetDetailPage() {
             <div className="grid grid-cols-2 border-b border-border">
               <div className="p-4 md:p-6 border-r border-border">
                 <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">Days Remaining</label>
-                <p className="text-4xl md:text-5xl font-bold text-destructive mt-1 tabular-nums">
-                  {String(details.daysRemaining).padStart(2, "0")}
+                <p className={`text-4xl md:text-5xl font-bold mt-1 tabular-nums ${days < 0 ? "text-destructive" : colors.text}`}>
+                  {days < 0 ? Math.abs(days) : String(days).padStart(2, "0")}
                 </p>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1">Due {details.renewalDate}</p>
+                <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                  {days < 0 ? `${Math.abs(days)} days overdue` : `Due ${formatDate(asset.renewalDate)}`}
+                </p>
               </div>
               <div className="p-4 md:p-6">
-                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">Annual Price</label>
-                <p className="text-3xl md:text-4xl font-bold text-foreground mt-1 tabular-nums">{details.price}</p>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1">USD per {details.interval}</p>
+                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">Price</label>
+                <p className="text-3xl md:text-4xl font-bold text-foreground mt-1 tabular-nums">
+                  {asset.priceAmount ? `${asset.priceCurrency} ${parseFloat(asset.priceAmount).toFixed(2)}` : "—"}
+                </p>
+                <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                  {asset.renewalIntervalValue && asset.renewalIntervalUnit
+                    ? `per ${asset.renewalIntervalValue} ${asset.renewalIntervalUnit.toLowerCase()}`
+                    : "no interval set"}
+                </p>
               </div>
             </div>
             <div className="p-4 md:p-6 grid grid-cols-2 gap-y-4 md:gap-y-5">
-              {[["Vendor", details.vendor], ["Project", details.project]].map(([label, value]) => (
-                <div key={label}>
-                  <p className="text-[11px] text-muted-foreground font-medium">{label}</p>
-                  <p className="text-sm text-foreground mt-0.5">{value}</p>
-                </div>
-              ))}
+              <div>
+                <p className="text-[11px] text-muted-foreground font-medium">Vendor</p>
+                {editMode ? (
+                  <input
+                    type="text"
+                    value={editFields.vendorName}
+                    onChange={(e) => setEditFields((f) => ({ ...f, vendorName: e.target.value }))}
+                    className="text-sm bg-secondary border border-border rounded px-2 py-1 mt-0.5 w-full focus:outline-none focus:border-primary"
+                  />
+                ) : (
+                  <p className="text-sm text-foreground mt-0.5">{asset.vendorName || "—"}</p>
+                )}
+              </div>
+              <div>
+                <p className="text-[11px] text-muted-foreground font-medium">Project</p>
+                <p className="text-sm text-foreground mt-0.5">{asset.project?.name || "—"}</p>
+              </div>
               <div>
                 <p className="text-[11px] text-muted-foreground font-medium">Assigned To</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="w-5 h-5 rounded-full bg-secondary text-[9px] flex items-center justify-center font-semibold text-foreground">HY</div>
-                  <p className="text-sm text-foreground">{details.assignedTo}</p>
-                </div>
+                {asset.assignedUser ? (
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <div className="w-5 h-5 rounded-full bg-secondary text-[9px] flex items-center justify-center font-semibold text-foreground">
+                      {initials(asset.assignedUser.fullName)}
+                    </div>
+                    <p className="text-sm text-foreground">{asset.assignedUser.fullName}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-foreground mt-0.5">—</p>
+                )}
               </div>
               <div>
                 <p className="text-[11px] text-muted-foreground font-medium">Auto-Renew</p>
                 <span className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
-                  <span className="text-xs text-destructive font-medium">Disabled</span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${asset.autoRenewEnabled ? "bg-success" : "bg-destructive"}`} />
+                  <span className={`text-xs font-medium ${asset.autoRenewEnabled ? "text-success" : "text-destructive"}`}>
+                    {asset.autoRenewEnabled ? "Enabled" : "Disabled"}
+                  </span>
                 </span>
               </div>
               <div className="col-span-2">
                 <p className="text-[11px] text-muted-foreground font-medium">Notes</p>
-                <p className="text-sm text-foreground/80 mt-0.5">{details.notes}</p>
+                {editMode ? (
+                  <textarea
+                    value={editFields.notes}
+                    onChange={(e) => setEditFields((f) => ({ ...f, notes: e.target.value }))}
+                    rows={3}
+                    className="text-sm bg-secondary border border-border rounded px-2 py-1 mt-0.5 w-full focus:outline-none focus:border-primary resize-none"
+                  />
+                ) : (
+                  <p className="text-sm text-foreground/80 mt-0.5">{asset.notes || "—"}</p>
+                )}
               </div>
               <div>
                 <p className="text-[11px] text-muted-foreground font-medium">Created</p>
-                <p className="text-sm text-foreground font-mono">{details.created}</p>
+                <p className="text-sm text-foreground font-mono">{formatDate(asset.createdAt)}</p>
               </div>
+              {asset.lastRenewedAt && (
+                <div>
+                  <p className="text-[11px] text-muted-foreground font-medium">Last Renewed</p>
+                  <p className="text-sm text-foreground font-mono">{formatDate(asset.lastRenewedAt)}</p>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Timeline */}
           <div className="bg-card border border-border rounded-xl p-4 md:p-5">
             <h3 className="text-sm font-medium text-foreground mb-4">Renewal History</h3>
-            <div className="space-y-0">
-              {timeline.map((event, i) => (
-                <div key={i} className="flex gap-3 relative">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
-                      event.type === "renewed" ? "bg-success" :
-                      event.type === "reminder" ? "bg-warning" :
-                      "bg-primary"
-                    }`} />
-                    {i < timeline.length - 1 && <div className="w-px flex-1 bg-border min-h-[28px]" />}
+            {history.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No history yet.</p>
+            ) : (
+              <div className="space-y-0">
+                {history.map((event, i) => (
+                  <div key={event.id} className="flex gap-3 relative">
+                    <div className="flex flex-col items-center">
+                      <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
+                        event.eventType === "RENEWED" ? "bg-success" :
+                        event.eventType === "REMINDER_SENT" ? "bg-warning" :
+                        "bg-primary"
+                      }`} />
+                      {i < history.length - 1 && <div className="w-px flex-1 bg-border min-h-[28px]" />}
+                    </div>
+                    <div className="pb-5">
+                      <p className="text-xs text-foreground/80">
+                        {event.eventType.replace("_", " ")}
+                        {event.notes ? ` — ${event.notes}` : ""}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 font-mono">{formatDate(event.eventDate)}</p>
+                    </div>
                   </div>
-                  <div className="pb-5">
-                    <p className="text-xs text-foreground/80">{event.text}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5 font-mono">{event.date}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -145,19 +261,30 @@ export default function AssetDetailPage() {
             <p className="text-xs text-muted-foreground leading-relaxed">
               Default Policy — Notifications at 30, 14, 7, and 1 days before expiration.
             </p>
-            <button className="mt-3 text-xs font-medium text-primary hover:text-primary/80 transition-colors duration-150">
-              Change Policy →
-            </button>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-4 md:p-5">
             <h3 className="text-sm font-medium text-foreground mb-3">Quick Actions</h3>
             <div className="space-y-1">
-              {["Send Reminder Now", "Mark Renewed", "View in GoDaddy"].map((action) => (
-                <button key={action} className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150">
-                  {action}
-                </button>
-              ))}
+              <button
+                onClick={handleRenew}
+                disabled={renewAsset.isPending}
+                className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150"
+              >
+                {renewAsset.isPending ? "Renewing..." : "Mark Renewed"}
+              </button>
+              <button
+                onClick={handleEdit}
+                className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150"
+              >
+                Edit Asset
+              </button>
+              <button
+                onClick={handleDelete}
+                className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors duration-150"
+              >
+                Delete Asset
+              </button>
             </div>
           </div>
         </div>
