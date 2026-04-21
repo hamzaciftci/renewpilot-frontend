@@ -27,6 +27,7 @@ export interface AuthUser {
   avatarUrl: string | null;
   defaultTimezone: string;
   locale: string;
+  phoneNumber?: string | null;
   status: string;
   emailVerifiedAt: string | null;
   createdAt: string;

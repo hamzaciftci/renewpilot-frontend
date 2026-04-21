@@ -119,7 +119,7 @@ export const authApi = {
 
   logout: () => api.post<void>("/auth/logout"),
 
-  updateProfile: (body: { fullName?: string; timezone?: string; locale?: string; avatarUrl?: string }) =>
+  updateProfile: (body: { fullName?: string; timezone?: string; locale?: string; avatarUrl?: string; phoneNumber?: string }) =>
     api.patch<import("@/types").AuthUser>("/auth/me", body),
 
   changePassword: (body: { currentPassword: string; newPassword: string }) =>
@@ -230,6 +230,47 @@ export const notificationsApi = {
 
   updatePreferences: (orgId: string, body: Partial<import("@/types").NotificationPreferences>) =>
     api.put<import("@/types").NotificationPreferences>(`/organizations/${orgId}/notifications/preferences`, body),
+
+  test: (orgId: string, channel: "EMAIL" | "SMS" | "WHATSAPP" | "PUSH") =>
+    api.post<{ success: boolean; providerMessageId?: string; providerName?: string; error?: string }>(
+      `/organizations/${orgId}/notifications/test`,
+      { channel },
+    ),
+};
+
+// ─── Reminder Policies endpoints ──────────────────────────────────────────────
+
+export interface ReminderPolicy {
+  id: string;
+  organizationId: string;
+  name: string;
+  offsetDays: number[];
+  channelConfig: { email?: boolean; sms?: boolean; whatsapp?: boolean; push?: boolean };
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const reminderPoliciesApi = {
+  list: (orgId: string) =>
+    api.get<ReminderPolicy[]>(`/organizations/${orgId}/reminder-policies`),
+
+  get: (orgId: string, id: string) =>
+    api.get<ReminderPolicy>(`/organizations/${orgId}/reminder-policies/${id}`),
+
+  create: (
+    orgId: string,
+    body: { name: string; offsetDays: number[]; channelConfig: ReminderPolicy["channelConfig"]; isDefault?: boolean },
+  ) => api.post<ReminderPolicy>(`/organizations/${orgId}/reminder-policies`, body),
+
+  update: (orgId: string, id: string, body: Partial<{ name: string; offsetDays: number[]; channelConfig: ReminderPolicy["channelConfig"]; isDefault: boolean }>) =>
+    api.patch<ReminderPolicy>(`/organizations/${orgId}/reminder-policies/${id}`, body),
+
+  remove: (orgId: string, id: string) =>
+    api.delete<void>(`/organizations/${orgId}/reminder-policies/${id}`),
+
+  ensureDefault: (orgId: string) =>
+    api.post<ReminderPolicy>(`/organizations/${orgId}/reminder-policies/ensure-default`),
 };
 
 // ─── Billing endpoints ────────────────────────────────────────────────────────
