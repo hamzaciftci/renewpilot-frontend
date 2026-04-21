@@ -17,7 +17,13 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/dashboard", { replace: true });
+      const redirect = sessionStorage.getItem("postLoginRedirect");
+      if (redirect) {
+        sessionStorage.removeItem("postLoginRedirect");
+        navigate(redirect, { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
     } catch (err: unknown) {
       const msg = (err as { message?: string })?.message ?? "Geçersiz e-posta veya şifre";
       setError(msg);

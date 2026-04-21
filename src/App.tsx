@@ -16,6 +16,7 @@ import TeamPage from "@/pages/TeamPage";
 import BillingPage from "@/pages/BillingPage";
 import SettingsPage from "@/pages/SettingsPage";
 import LoginPage from "@/pages/LoginPage";
+import AcceptInvitePage from "@/pages/AcceptInvitePage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -56,6 +57,9 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+            {/* Public routes (accessible whether logged in or not) */}
+            <Route path="/invite/:token" element={<AcceptInvitePage />} />
 
             {/* Guest-only routes */}
             <Route element={<GuestRoute />}>

@@ -273,6 +273,51 @@ export const reminderPoliciesApi = {
     api.post<ReminderPolicy>(`/organizations/${orgId}/reminder-policies/ensure-default`),
 };
 
+// ─── Invitations endpoints ────────────────────────────────────────────────────
+
+export interface Invitation {
+  id: string;
+  email: string;
+  role: "OWNER" | "ADMIN" | "MEMBER" | "VIEWER";
+  status: "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+  expiresAt: string;
+  createdAt: string;
+  acceptedAt?: string | null;
+  revokedAt?: string | null;
+  acceptUrl?: string; // only returned on create/resend
+}
+
+export interface PublicInvitation {
+  email: string;
+  role: "OWNER" | "ADMIN" | "MEMBER" | "VIEWER";
+  status: "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED";
+  expiresAt: string;
+  organization: { id: string; name: string; slug: string };
+  inviter: { fullName: string; email: string } | null;
+}
+
+export const invitationsApi = {
+  list: (orgId: string) =>
+    api.get<Invitation[]>(`/organizations/${orgId}/invitations`),
+
+  create: (orgId: string, body: { email: string; role?: string }) =>
+    api.post<Invitation>(`/organizations/${orgId}/invitations`, body),
+
+  revoke: (orgId: string, invitationId: string) =>
+    api.delete<{ message: string }>(`/organizations/${orgId}/invitations/${invitationId}`),
+
+  resend: (orgId: string, invitationId: string) =>
+    api.post<{ message: string; expiresAt: string; acceptUrl: string }>(
+      `/organizations/${orgId}/invitations/${invitationId}/resend`,
+    ),
+
+  // Public endpoints (token-based)
+  getByToken: (token: string) => api.get<PublicInvitation>(`/invitations/${token}`),
+
+  accept: (token: string) =>
+    api.post<{ message: string; organizationId: string }>(`/invitations/${token}/accept`),
+};
+
 // ─── Billing endpoints ────────────────────────────────────────────────────────
 
 export const billingApi = {

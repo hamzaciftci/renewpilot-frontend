@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Plus, MoreHorizontal, Trash2, Shield } from "lucide-react";
+import { Plus, Trash2, Shield, Mail, RefreshCw, Copy, Check, Clock, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { orgsApi } from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { invitationsApi, orgsApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTeamMembers } from "@/hooks/useOrganization";
 import { initials } from "@/lib/date";
@@ -17,26 +17,70 @@ const roleColors: Record<MemberRole, string> = {
 
 const ROLES: MemberRole[] = ["ADMIN", "MEMBER", "VIEWER"];
 
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("tr-TR", { year: "numeric", month: "short", day: "numeric" });
+}
+
+function statusBadge(status: string): { bg: string; text: string; label: string } {
+  switch (status) {
+    case "PENDING":
+      return { bg: "bg-warning/10", text: "text-warning", label: "Bekliyor" };
+    case "ACCEPTED":
+      return { bg: "bg-success/10", text: "text-success", label: "Kabul edildi" };
+    case "REVOKED":
+      return { bg: "bg-muted/40", text: "text-muted-foreground", label: "İptal edildi" };
+    case "EXPIRED":
+      return { bg: "bg-destructive/10", text: "text-destructive", label: "Süresi doldu" };
+    default:
+      return { bg: "bg-muted/40", text: "text-muted-foreground", label: status };
+  }
+}
+
 export default function TeamPage() {
   const { orgId, membership } = useAuth();
   const qc = useQueryClient();
-  const { data: members = [], isLoading } = useTeamMembers();
+  const { data: members = [], isLoading: membersLoading } = useTeamMembers();
+
+  const canManage = membership?.role === "OWNER" || membership?.role === "ADMIN";
+
+  const { data: invitations = [], isLoading: invitationsLoading } = useQuery({
+    queryKey: ["invitations", orgId],
+    queryFn: () => invitationsApi.list(orgId!),
+    enabled: !!orgId && canManage,
+  });
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<MemberRole>("MEMBER");
   const [showInvite, setShowInvite] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const canManage = membership?.role === "OWNER" || membership?.role === "ADMIN";
-
-  const inviteMember = useMutation({
-    mutationFn: () => orgsApi.inviteMember(orgId!, { email: inviteEmail, role: inviteRole }),
-    onSuccess: () => {
-      toast.success(`${inviteEmail} takıma eklendi`);
+  const createInvite = useMutation({
+    mutationFn: () => invitationsApi.create(orgId!, { email: inviteEmail.trim(), role: inviteRole }),
+    onSuccess: (inv) => {
+      toast.success(`Davet gönderildi: ${inv.email}`);
       setInviteEmail("");
       setShowInvite(false);
-      qc.invalidateQueries({ queryKey: ["team", orgId] });
+      qc.invalidateQueries({ queryKey: ["invitations", orgId] });
     },
     onError: (e: any) => toast.error(e.message ?? "Davet gönderilemedi"),
+  });
+
+  const revokeInvite = useMutation({
+    mutationFn: (invitationId: string) => invitationsApi.revoke(orgId!, invitationId),
+    onSuccess: () => {
+      toast.success("Davet iptal edildi");
+      qc.invalidateQueries({ queryKey: ["invitations", orgId] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "İptal edilemedi"),
+  });
+
+  const resendInvite = useMutation({
+    mutationFn: (invitationId: string) => invitationsApi.resend(orgId!, invitationId),
+    onSuccess: () => {
+      toast.success("Davet tekrar gönderildi (eski bağlantı geçersiz)");
+      qc.invalidateQueries({ queryKey: ["invitations", orgId] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Tekrar gönderilemedi"),
   });
 
   const removeMember = useMutation({
@@ -59,9 +103,26 @@ export default function TeamPage() {
   });
 
   const handleInvite = () => {
-    if (!inviteEmail.trim()) { toast.error("E-posta adresi gerekli"); return; }
-    inviteMember.mutate();
+    if (!inviteEmail.trim()) {
+      toast.error("E-posta adresi gerekli");
+      return;
+    }
+    createInvite.mutate();
   };
+
+  const copyLink = async (url: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedId(id);
+      toast.success("Davet bağlantısı kopyalandı");
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      toast.error("Kopyalanamadı");
+    }
+  };
+
+  const pendingInvites = invitations.filter((inv) => inv.status === "PENDING");
+  const pastInvites = invitations.filter((inv) => inv.status !== "PENDING");
 
   return (
     <div className="space-y-4 md:space-y-6 max-w-5xl">
@@ -73,7 +134,7 @@ export default function TeamPage() {
             className="bg-primary text-primary-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Üye Ekle</span>
+            <span className="hidden sm:inline">Davet Gönder</span>
           </button>
         )}
       </div>
@@ -81,7 +142,10 @@ export default function TeamPage() {
       {/* Invite Form */}
       {showInvite && canManage && (
         <div className="bg-card border border-primary/30 rounded-xl p-4 md:p-5 space-y-4">
-          <h3 className="text-sm font-medium text-foreground">Yeni Üye Ekle</h3>
+          <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <Mail className="w-4 h-4 text-primary" />
+            Yeni Üye Daveti
+          </h3>
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="email"
@@ -102,10 +166,10 @@ export default function TeamPage() {
             </select>
             <button
               onClick={handleInvite}
-              disabled={inviteMember.isPending}
+              disabled={createInvite.isPending}
               className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 whitespace-nowrap disabled:opacity-50"
             >
-              {inviteMember.isPending ? "Ekleniyor..." : "Ekle"}
+              {createInvite.isPending ? "Gönderiliyor..." : "Davet Gönder"}
             </button>
             <button
               onClick={() => setShowInvite(false)}
@@ -114,15 +178,78 @@ export default function TeamPage() {
               İptal
             </button>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Kullanıcının hesabı olması gerekiyor. Hesap yoksa önce kayıt olması gerekir.
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Davet e-postası otomatik olarak gönderilir. Kullanıcının RenewPilot hesabı yoksa önce kayıt olması gerekir — davet bağlantısı 7 gün geçerlidir.
           </p>
+        </div>
+      )}
+
+      {/* Pending Invitations */}
+      {canManage && pendingInvites.length > 0 && (
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b border-border flex items-center gap-2">
+            <Clock className="w-4 h-4 text-warning" />
+            <h3 className="text-sm font-medium text-foreground">Bekleyen Davetler ({pendingInvites.length})</h3>
+          </div>
+          <div className="divide-y divide-border">
+            {pendingInvites.map((inv) => {
+              const badge = statusBadge(inv.status);
+              return (
+                <div key={inv.id} className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-secondary/40 transition-colors">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-primary">
+                      <Mail className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">{inv.email}</p>
+                      <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-0.5">
+                        <span className={`font-mono font-semibold ${roleColors[inv.role]}`}>{inv.role}</span>
+                        <span>·</span>
+                        <span>Geçerlilik: {formatDate(inv.expiresAt)}</span>
+                        <span className={`${badge.bg} ${badge.text} px-1.5 py-0.5 rounded font-medium`}>{badge.label}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {inv.acceptUrl && (
+                      <button
+                        onClick={() => copyLink(inv.acceptUrl!, inv.id)}
+                        className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-secondary"
+                        title="Bağlantıyı kopyala"
+                      >
+                        {copiedId === inv.id ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" strokeWidth={1.5} />}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => resendInvite.mutate(inv.id)}
+                      disabled={resendInvite.isPending}
+                      className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded hover:bg-secondary"
+                      title="Tekrar gönder"
+                    >
+                      <RefreshCw className="w-4 h-4" strokeWidth={1.5} />
+                    </button>
+                    <button
+                      onClick={() => revokeInvite.mutate(inv.id)}
+                      disabled={revokeInvite.isPending}
+                      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors rounded hover:bg-secondary"
+                      title="İptal et"
+                    >
+                      <XCircle className="w-4 h-4" strokeWidth={1.5} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
       {/* Members Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
-        {isLoading ? (
+        <div className="px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-medium text-foreground">Aktif Üyeler ({members.length})</h3>
+        </div>
+        {membersLoading ? (
           <div className="p-8 space-y-3 animate-pulse">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-12 bg-secondary rounded-lg" />
@@ -237,6 +364,29 @@ export default function TeamPage() {
           </>
         )}
       </div>
+
+      {/* Past Invitations */}
+      {canManage && !invitationsLoading && pastInvites.length > 0 && (
+        <details className="bg-card border border-border rounded-xl overflow-hidden">
+          <summary className="px-5 py-3 cursor-pointer text-sm text-muted-foreground hover:bg-secondary/30 transition-colors">
+            Geçmiş davetler ({pastInvites.length})
+          </summary>
+          <div className="divide-y divide-border border-t border-border">
+            {pastInvites.slice(0, 20).map((inv) => {
+              const badge = statusBadge(inv.status);
+              return (
+                <div key={inv.id} className="px-5 py-2.5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-sm text-muted-foreground font-mono truncate">{inv.email}</span>
+                    <span className={`text-[10px] font-mono font-semibold ${roleColors[inv.role]}`}>{inv.role}</span>
+                  </div>
+                  <span className={`${badge.bg} ${badge.text} text-[10px] px-2 py-0.5 rounded font-medium whitespace-nowrap`}>{badge.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </details>
+      )}
 
       {/* Info Banner */}
       <div className="bg-card border border-border rounded-xl p-4 flex items-start gap-3">
