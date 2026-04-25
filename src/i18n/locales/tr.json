@@ -560,7 +560,20 @@
       "preferencesSaved": "Bildirim tercihleri kaydedildi",
       "testSent": "{{channel}} test bildirimi gönderildi ✓",
       "testFailed": "{{channel}} başarısız: {{error}}",
-      "testFailedGeneric": "Test gönderilemedi"
+      "testFailedGeneric": "Test gönderilemedi",
+      "browserPush": {
+        "title": "Tarayıcı Anlık Bildirimleri",
+        "desc": "Sekme kapalı olsa bile bu cihazda dikkatinizi gerektiren bir şey olduğunda sistem bildirimi alın.",
+        "unsupported": "Bu tarayıcı anlık bildirimleri desteklemiyor.",
+        "denied": "Bildirimler engellendi. Tarayıcı site ayarlarınızdan etkinleştirin ve bu sayfaya geri dönün.",
+        "activeOnThisDevice": "Bu cihazda etkin.",
+        "notActive": "Bu cihazda henüz etkinleştirilmedi.",
+        "busy": "İşleniyor…",
+        "disable": "Bu cihazda devre dışı bırak",
+        "enable": "Bu cihazda etkinleştir",
+        "enabled": "Tarayıcı bildirimleri etkinleştirildi",
+        "disabled": "Tarayıcı bildirimleri devre dışı bırakıldı"
+      }
     },
     "reminders": {
       "title": "Hatırlatıcı Politikaları",

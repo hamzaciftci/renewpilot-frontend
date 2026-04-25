@@ -6,8 +6,9 @@ import i18n, { SUPPORTED_LANGUAGES, type SupportedLanguageCode } from "@/i18n";
 import { authApi, orgsApi, notificationsApi, reminderPoliciesApi, type ReminderPolicy } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { initials } from "@/lib/date";
-import { Trash2, Plus, Star, Send, Bell, Mail, MessageSquare, Smartphone, Upload, X, Languages } from "lucide-react";
+import { Trash2, Plus, Star, Send, Bell, Mail, MessageSquare, Smartphone, Upload, X, Languages, BellOff, BellRing, AlertTriangle } from "lucide-react";
 import { AvatarCropDialog } from "@/components/AvatarCropDialog";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 type TabKey = "profile" | "organization" | "security" | "notifications" | "reminders" | "language";
 const TAB_KEYS: TabKey[] = ["profile", "organization", "security", "notifications", "reminders", "language"];
@@ -498,6 +499,8 @@ export default function SettingsPage() {
                 {updatePrefs.isPending ? t("settings.profile.saving") : t("settings.notifications.save")}
               </button>
             </div>
+
+            <BrowserPushCard />
           </div>
         )}
 
@@ -867,6 +870,102 @@ function PolicyEditor({
           {isSaving ? t("settings.reminders.saving") : t("settings.reminders.save")}
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Browser-push subscription card. Sits beside the channel preferences in the
+ * notifications tab and handles the actual permission + PushManager dance.
+ *
+ * Distinct from the "PUSH" channel toggle (which is a server-side preference);
+ * a user can have the channel enabled but no browser subscribed (or vice versa).
+ */
+function BrowserPushCard() {
+  const { t } = useTranslation();
+  const { status, busy, error, subscribe, unsubscribe } = usePushNotifications();
+
+  // Show different visual states. The important UX bits:
+  //  - "denied": user can't fix this from our app, they must change browser settings.
+  //  - "unsupported": e.g. iOS Safari before 16.4 or in-app browsers — give up gracefully.
+  //  - "subscribed": green check, "Disable" button.
+  //  - "prompt"/"unsubscribed": primary CTA "Enable".
+  const isSubscribed = status === "subscribed";
+  const isDenied = status === "denied";
+  const isUnsupported = status === "unsupported";
+
+  const handleClick = async () => {
+    if (isSubscribed) {
+      const ok = await unsubscribe();
+      if (ok) toast.success(t("settings.notifications.browserPush.disabled"));
+    } else {
+      const ok = await subscribe();
+      if (ok) toast.success(t("settings.notifications.browserPush.enabled"));
+    }
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-8 space-y-4">
+      <div className="flex items-start gap-3">
+        {isSubscribed ? (
+          <BellRing className="w-5 h-5 text-success mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+        ) : isDenied || isUnsupported ? (
+          <BellOff className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+        ) : (
+          <Bell className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+        )}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-foreground">
+            {t("settings.notifications.browserPush.title")}
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            {t("settings.notifications.browserPush.desc")}
+          </p>
+        </div>
+      </div>
+
+      {/* Status line — what's happening right now on this device */}
+      <div className="text-xs">
+        {isUnsupported && (
+          <p className="flex items-center gap-1.5 text-muted-foreground">
+            <AlertTriangle className="w-3.5 h-3.5" strokeWidth={1.5} />
+            {t("settings.notifications.browserPush.unsupported")}
+          </p>
+        )}
+        {isDenied && (
+          <p className="flex items-start gap-1.5 text-warning">
+            <AlertTriangle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+            <span>{t("settings.notifications.browserPush.denied")}</span>
+          </p>
+        )}
+        {isSubscribed && (
+          <p className="text-success">{t("settings.notifications.browserPush.activeOnThisDevice")}</p>
+        )}
+        {(status === "prompt" || status === "unsubscribed") && (
+          <p className="text-muted-foreground">
+            {t("settings.notifications.browserPush.notActive")}
+          </p>
+        )}
+        {error && <p className="text-destructive mt-1.5">{error}</p>}
+      </div>
+
+      {!isUnsupported && !isDenied && (
+        <button
+          onClick={handleClick}
+          disabled={busy}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-50 ${
+            isSubscribed
+              ? "bg-secondary text-foreground hover:bg-accent border border-border"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
+        >
+          {busy
+            ? t("settings.notifications.browserPush.busy")
+            : isSubscribed
+              ? t("settings.notifications.browserPush.disable")
+              : t("settings.notifications.browserPush.enable")}
+        </button>
+      )}
     </div>
   );
 }

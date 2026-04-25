@@ -103,7 +103,11 @@ export const api = {
   put: <T>(path: string, body?: unknown) =>
     request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
 
-  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
+  delete: <T>(path: string, body?: unknown) =>
+    request<T>(path, {
+      method: "DELETE",
+      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+    }),
 };
 
 // ─── Auth endpoints ───────────────────────────────────────────────────────────
@@ -252,6 +256,31 @@ export interface WhoisLookupResult {
 export const lookupsApi = {
   whois: (domain: string) =>
     api.get<WhoisLookupResult>(`/lookups/whois?domain=${encodeURIComponent(domain)}`),
+};
+
+// ─── Web Push endpoints ───────────────────────────────────────────────────────
+
+export interface PushSubscriptionPayload {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  userAgent?: string;
+}
+
+export interface PushSubscriptionRecord {
+  id: string;
+  endpoint: string;
+  userAgent: string | null;
+  createdAt: string;
+  lastUsedAt: string | null;
+}
+
+export const pushApi = {
+  getPublicKey: () => api.get<{ publicKey: string | null }>("/push/public-key"),
+  subscribe: (body: PushSubscriptionPayload) =>
+    api.post<{ id: string; createdAt: string }>("/push/subscribe", body),
+  unsubscribe: (endpoint: string) =>
+    api.delete<void>(`/push/subscribe`, { endpoint }),
+  list: () => api.get<PushSubscriptionRecord[]>("/push/subscriptions"),
 };
 
 // ─── Reminder Policies endpoints ──────────────────────────────────────────────

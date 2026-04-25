@@ -560,7 +560,20 @@
       "preferencesSaved": "Benachrichtigungseinstellungen gespeichert",
       "testSent": "{{channel}} Testbenachrichtigung gesendet ✓",
       "testFailed": "{{channel}} fehlgeschlagen: {{error}}",
-      "testFailedGeneric": "Test konnte nicht gesendet werden"
+      "testFailedGeneric": "Test konnte nicht gesendet werden",
+      "browserPush": {
+        "title": "Browser-Push-Benachrichtigungen",
+        "desc": "Erhalten Sie auf diesem Gerät eine Systembenachrichtigung, wenn etwas Ihre Aufmerksamkeit erfordert — auch wenn der Tab geschlossen ist.",
+        "unsupported": "Dieser Browser unterstützt keine Push-Benachrichtigungen.",
+        "denied": "Benachrichtigungen sind blockiert. Aktivieren Sie sie in den Browser-Website-Einstellungen und kehren Sie dann zu dieser Seite zurück.",
+        "activeOnThisDevice": "Auf diesem Gerät aktiv.",
+        "notActive": "Auf diesem Gerät noch nicht aktiviert.",
+        "busy": "Wird verarbeitet…",
+        "disable": "Auf diesem Gerät deaktivieren",
+        "enable": "Auf diesem Gerät aktivieren",
+        "enabled": "Browser-Benachrichtigungen aktiviert",
+        "disabled": "Browser-Benachrichtigungen deaktiviert"
+      }
     },
     "reminders": {
       "title": "Erinnerungsrichtlinien",

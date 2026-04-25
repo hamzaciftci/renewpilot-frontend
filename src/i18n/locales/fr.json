@@ -560,7 +560,20 @@
       "preferencesSaved": "Préférences de notification enregistrées",
       "testSent": "Notification test {{channel}} envoyée ✓",
       "testFailed": "{{channel}} échoué : {{error}}",
-      "testFailedGeneric": "Impossible d'envoyer le test"
+      "testFailedGeneric": "Impossible d'envoyer le test",
+      "browserPush": {
+        "title": "Notifications push du navigateur",
+        "desc": "Recevez une notification système sur cet appareil quand quelque chose nécessite votre attention — même lorsque l'onglet est fermé.",
+        "unsupported": "Ce navigateur ne prend pas en charge les notifications push.",
+        "denied": "Les notifications sont bloquées. Activez-les dans les paramètres du site de votre navigateur, puis revenez à cette page.",
+        "activeOnThisDevice": "Actives sur cet appareil.",
+        "notActive": "Pas encore activées sur cet appareil.",
+        "busy": "En cours…",
+        "disable": "Désactiver sur cet appareil",
+        "enable": "Activer sur cet appareil",
+        "enabled": "Notifications du navigateur activées",
+        "disabled": "Notifications du navigateur désactivées"
+      }
     },
     "reminders": {
       "title": "Politiques de rappel",

@@ -560,7 +560,20 @@
       "preferencesSaved": "Notification preferences saved",
       "testSent": "{{channel}} test notification sent ✓",
       "testFailed": "{{channel}} failed: {{error}}",
-      "testFailedGeneric": "Test could not be sent"
+      "testFailedGeneric": "Test could not be sent",
+      "browserPush": {
+        "title": "Browser Push Notifications",
+        "desc": "Get a system notification on this device when something needs your attention — even when the tab is closed.",
+        "unsupported": "This browser doesn't support push notifications.",
+        "denied": "Notifications are blocked. Enable them in your browser site settings, then return to this page.",
+        "activeOnThisDevice": "Active on this device.",
+        "notActive": "Not enabled on this device yet.",
+        "busy": "Working…",
+        "disable": "Disable on this device",
+        "enable": "Enable on this device",
+        "enabled": "Browser notifications enabled",
+        "disabled": "Browser notifications disabled"
+      }
     },
     "reminders": {
       "title": "Reminder Policies",
