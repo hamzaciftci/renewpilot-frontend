@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Server, CalendarDays, RefreshCw, Users,
-  Bell, CreditCard, Settings, ChevronDown, LogOut, X,
+  Bell, CreditCard, Settings, LogOut, X, Building2, PieChart,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { initials } from "@/lib/date";
@@ -14,19 +15,21 @@ interface AppSidebarProps {
 }
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Pano", href: "/dashboard" },
-  { icon: Server, label: "Varlıklar", href: "/assets" },
-  { icon: CalendarDays, label: "Takvim", href: "/calendar" },
-  { icon: RefreshCw, label: "Yenilemeler", href: "/renewals" },
-  { icon: Users, label: "Ekip", href: "/team" },
-  { icon: Bell, label: "Bildirimler", href: "/notifications", badge: true },
-  { icon: CreditCard, label: "Faturalandırma", href: "/billing" },
-  { icon: Settings, label: "Ayarlar", href: "/settings" },
+  { icon: LayoutDashboard, key: "nav.dashboard", href: "/dashboard" },
+  { icon: Server, key: "nav.assets", href: "/assets" },
+  { icon: CalendarDays, key: "nav.calendar", href: "/calendar" },
+  { icon: RefreshCw, key: "nav.renewals", href: "/renewals" },
+  { icon: PieChart, key: "nav.reports", href: "/reports" },
+  { icon: Users, key: "nav.team", href: "/team" },
+  { icon: Bell, key: "nav.notifications", href: "/notifications", badge: true },
+  { icon: CreditCard, key: "nav.billing", href: "/billing" },
+  { icon: Settings, key: "nav.settings", href: "/settings" },
 ];
 
 export function AppSidebar({ open, onClose }: AppSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, membership, logout } = useAuth();
   const { data: unread } = useUnreadNotificationCount();
 
@@ -67,7 +70,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
           const showBadge = item.badge && hasUnread;
           return (
             <Link
-              key={item.label}
+              key={item.key}
               to={item.href}
               onClick={onClose}
               className={cn(
@@ -81,7 +84,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-primary rounded-r" />
               )}
               <item.icon className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
-              <span>{item.label}</span>
+              <span>{t(item.key)}</span>
               {showBadge && (
                 <div className="w-1.5 h-1.5 rounded-full bg-destructive ml-auto" />
               )}
@@ -93,16 +96,20 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
       {/* Organizasyon + Kullanıcı */}
       <div className="border-t border-border p-3 space-y-2">
         {membership && (
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-secondary/50 transition-colors w-full text-left">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-md w-full text-left">
+            <Building2 className="w-3 h-3 text-muted-foreground flex-shrink-0" strokeWidth={1.5} />
             <span className="text-xs font-medium text-muted-foreground truncate">
               {membership.organization.name}
             </span>
-            <ChevronDown className="w-3 h-3 text-muted-foreground ml-auto flex-shrink-0" />
-          </button>
+          </div>
         )}
         <div className="flex items-center gap-2.5 px-3 py-1.5">
-          <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[10px] font-semibold text-foreground flex-shrink-0">
-            {user ? initials(user.fullName) : "—"}
+          <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-[10px] font-semibold text-foreground flex-shrink-0 overflow-hidden">
+            {user?.avatarUrl ? (
+              <img src={user.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+            ) : (
+              <span>{user ? initials(user.fullName) : "—"}</span>
+            )}
           </div>
           <div className="overflow-hidden flex-1">
             <p className="text-xs font-medium text-foreground truncate">
@@ -114,7 +121,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
           </div>
           <button
             onClick={handleLogout}
-            title="Çıkış Yap"
+            title={t("nav.logout")}
             className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
           >
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.5} />

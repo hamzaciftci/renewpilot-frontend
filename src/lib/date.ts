@@ -1,6 +1,8 @@
-/** Format an ISO date string to a short display like "Mar 18, 2026" */
+import i18n, { getIntlLocale } from "@/i18n";
+
+/** Format an ISO date string to a short display like "Mar 18, 2026" in the active locale */
 export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("tr-TR", {
+  return new Date(iso).toLocaleDateString(getIntlLocale(), {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -24,16 +26,16 @@ export function daysColor(days: number): { dot: string; text: string } {
   return { dot: "bg-muted-foreground", text: "text-muted-foreground" };
 }
 
-/** Human-readable relative time: "2 hours ago", "3 days ago" */
+/** Human-readable relative time: "2 hours ago", "3 days ago" — localized */
 export function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins} dk önce`;
+  if (mins < 60) return i18n.t("timeAgo.minsAgo", { count: mins });
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours} saat önce`;
+  if (hours < 24) return i18n.t("timeAgo.hoursAgo", { count: hours });
   const days = Math.floor(hours / 24);
-  if (days === 1) return "Dün";
-  if (days < 30) return `${days} gün önce`;
+  if (days === 1) return i18n.t("timeAgo.yesterday");
+  if (days < 30) return i18n.t("timeAgo.daysAgo", { count: days });
   return formatDate(iso);
 }
 

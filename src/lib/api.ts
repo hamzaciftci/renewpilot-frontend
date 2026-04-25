@@ -238,6 +238,22 @@ export const notificationsApi = {
     ),
 };
 
+// ─── Lookups endpoints (RDAP / WHOIS) ─────────────────────────────────────────
+
+export interface WhoisLookupResult {
+  domain: string;
+  expiresAt: string | null;     // ISO date YYYY-MM-DD
+  registeredAt: string | null;  // ISO date YYYY-MM-DD
+  registrar: string | null;
+  status: string[];
+  source: string;
+}
+
+export const lookupsApi = {
+  whois: (domain: string) =>
+    api.get<WhoisLookupResult>(`/lookups/whois?domain=${encodeURIComponent(domain)}`),
+};
+
 // ─── Reminder Policies endpoints ──────────────────────────────────────────────
 
 export interface ReminderPolicy {

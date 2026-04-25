@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { Plus, Globe, Server, ShieldCheck, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 const quickItems = [
-  { icon: Globe, label: "Alan Adı Ekle", type: "domain" },
-  { icon: Server, label: "Sunucu Ekle", type: "server" },
-  { icon: ShieldCheck, label: "SSL Ekle", type: "ssl" },
-  { icon: Key, label: "Lisans Ekle", type: "license" },
+  { icon: Globe, key: "quickAdd.addDomain", type: "domain" },
+  { icon: Server, key: "quickAdd.addServer", type: "server" },
+  { icon: ShieldCheck, key: "quickAdd.addSsl", type: "ssl" },
+  { icon: Key, key: "quickAdd.addLicense", type: "license" },
 ];
 
 export function QuickAddFAB() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
@@ -25,7 +27,7 @@ export function QuickAddFAB() {
               className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-secondary transition-colors duration-150 w-full text-left"
             >
               <item.icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
-              <span className="text-sm font-medium text-foreground">{item.label}</span>
+              <span className="text-sm font-medium text-foreground">{t(item.key)}</span>
             </button>
           ))}
         </div>

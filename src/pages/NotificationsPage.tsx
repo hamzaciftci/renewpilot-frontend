@@ -1,5 +1,7 @@
-import { Bell, Mail, Smartphone } from "lucide-react";
+import { Bell, Mail, Smartphone, Settings as SettingsIcon } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useNotifications, useMarkNotificationRead } from "@/hooks/useNotifications";
 import { timeAgo } from "@/lib/date";
 
@@ -17,14 +19,8 @@ const channelColors: Record<string, string> = {
   WHATSAPP: "text-success",
 };
 
-const prefItems = [
-  { label: "E-posta bildirimleri", enabled: true },
-  { label: "Push bildirimleri", enabled: true },
-  { label: "SMS bildirimleri", enabled: false },
-  { label: "WhatsApp", enabled: false },
-];
-
 export default function NotificationsPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<"all" | "unread">("all");
   const { data: notifications = [], isLoading } = useNotifications();
   const markRead = useMarkNotificationRead();
@@ -35,11 +31,16 @@ export default function NotificationsPage() {
   const filtered = tab === "unread" ? notifications.filter((n) => !isRead(n)) : notifications;
   const unreadCount = notifications.filter((n) => !isRead(n)).length;
 
+  const tabs: Array<{ key: "all" | "unread"; label: string }> = [
+    { key: "all", label: t("notifications.tabs.all") },
+    { key: "unread", label: t("notifications.tabs.unread", { count: unreadCount }) },
+  ];
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Tabs */}
       <div className="flex items-center gap-0 border-b border-border">
-        {([["all", "Tümü"], ["unread", `Okunmamış (${unreadCount})`]] as const).map(([key, label]) => (
+        {tabs.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setTab(key)}
@@ -56,13 +57,13 @@ export default function NotificationsPage() {
       <div className="space-y-1">
         {isLoading ? (
           <div className="bg-card border border-border rounded-xl p-12 text-center text-sm text-muted-foreground">
-            Yükleniyor...
+            {t("notifications.loading")}
           </div>
         ) : filtered.length === 0 ? (
           <div className="bg-card border border-border rounded-xl p-12 text-center">
             <Bell className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" strokeWidth={1.5} />
             <p className="text-sm text-muted-foreground">
-              {tab === "unread" ? "Okunmamış bildirim yok." : "Henüz bildirim yok."}
+              {tab === "unread" ? t("notifications.emptyUnread") : t("notifications.empty")}
             </p>
           </div>
         ) : (
@@ -93,7 +94,7 @@ export default function NotificationsPage() {
                     disabled={markRead.isPending}
                     className="text-xs text-primary font-medium hover:text-primary/80 whitespace-nowrap transition-colors duration-150 disabled:opacity-50"
                   >
-                    Okundu
+                    {t("notifications.markRead")}
                   </button>
                 )}
               </div>
@@ -102,23 +103,23 @@ export default function NotificationsPage() {
         )}
       </div>
 
-      {/* Preferences */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="text-sm font-medium text-foreground mb-4">Bildirim Tercihleri</h3>
-        <div className="space-y-3">
-          {prefItems.map((p) => (
-            <div key={p.label} className="flex items-center justify-between py-1.5">
-              <span className="text-sm text-foreground/80">{p.label}</span>
-              <div className={`w-9 h-5 rounded-full ${p.enabled ? "bg-primary" : "bg-border"} transition-colors duration-150 cursor-pointer`}>
-                <div className={`w-3.5 h-3.5 rounded-full bg-foreground shadow transition-transform mx-[3px] mt-[3px] ${p.enabled ? "translate-x-4" : ""}`} />
-              </div>
-            </div>
-          ))}
-          <div className="flex items-center justify-between py-1.5 border-t border-border pt-3 mt-2">
-            <span className="text-sm text-foreground/80">Sessiz saatler</span>
-            <span className="text-sm text-muted-foreground tabular-nums font-mono">22:00 — 08:00</span>
+      {/* Preferences link */}
+      <div className="bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <SettingsIcon className="w-5 h-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+          <div>
+            <h3 className="text-sm font-medium text-foreground">{t("notifications.preferences")}</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {t("notifications.preferencesDesc")}
+            </p>
           </div>
         </div>
+        <Link
+          to="/settings"
+          className="text-xs font-medium text-primary hover:underline whitespace-nowrap"
+        >
+          {t("notifications.goToSettings")}
+        </Link>
       </div>
     </div>
   );

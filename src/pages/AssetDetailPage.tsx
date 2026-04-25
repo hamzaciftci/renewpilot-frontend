@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronRight, Pencil, Check, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { useAsset, useAssetHistory, useUpdateAsset, useDeleteAsset } from "@/hooks/useAssets";
 import { useRenewAsset } from "@/hooks/useRenewals";
-import { ASSET_TYPE_LABEL, ASSET_STATUS_DISPLAY } from "@/types";
+import { ASSET_STATUS_DISPLAY } from "@/types";
 import { formatDate, daysUntil, daysColor, initials } from "@/lib/date";
 
 export default function AssetDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -28,20 +30,20 @@ export default function AssetDetailPage() {
 
   const handleSave = async () => {
     await updateAsset.mutateAsync(editFields);
-    toast.success("Asset updated");
+    toast.success(t("assetDetail.assetUpdated"));
     setEditMode(false);
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this asset?")) return;
+    if (!confirm(t("assetDetail.confirmDelete"))) return;
     await deleteAsset.mutateAsync(id!);
-    toast.success("Asset deleted");
+    toast.success(t("assetDetail.assetDeleted"));
     navigate("/assets");
   };
 
   const handleRenew = async () => {
     await renewAsset.mutateAsync({ assetId: id! });
-    toast.success("Asset marked as renewed");
+    toast.success(t("assetDetail.assetRenewed"));
   };
 
   if (isLoading) {
@@ -60,8 +62,8 @@ export default function AssetDetailPage() {
   if (!asset) {
     return (
       <div className="max-w-6xl">
-        <p className="text-muted-foreground">Asset not found.</p>
-        <Link to="/assets" className="text-primary text-sm mt-2 inline-block">← Back to Assets</Link>
+        <p className="text-muted-foreground">{t("assetDetail.notFound")}</p>
+        <Link to="/assets" className="text-primary text-sm mt-2 inline-block">{t("assetDetail.backToAssets")}</Link>
       </div>
     );
   }
@@ -69,13 +71,13 @@ export default function AssetDetailPage() {
   const days = daysUntil(asset.renewalDate);
   const colors = daysColor(days);
   const statusDisplay = ASSET_STATUS_DISPLAY[asset.status];
-  const typeLabel = ASSET_TYPE_LABEL[asset.assetType];
+  const typeLabel = t(`assets.typeShort.${asset.assetType}`, { defaultValue: asset.assetType });
 
   return (
     <div className="space-y-4 md:space-y-6 max-w-6xl">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link to="/assets" className="hover:text-foreground transition-colors duration-150">Assets</Link>
+        <Link to="/assets" className="hover:text-foreground transition-colors duration-150">{t("assetDetail.breadcrumb")}</Link>
         <ChevronRight className="w-3 h-3 flex-shrink-0" />
         <span className="text-foreground font-medium truncate">{asset.name}</span>
       </div>
@@ -87,7 +89,7 @@ export default function AssetDetailPage() {
           <span className="text-[10px] font-mono font-semibold uppercase text-primary">{typeLabel}</span>
           <span className="flex items-center gap-1.5">
             <span className={`w-1.5 h-1.5 rounded-full ${statusDisplay.dot}`} />
-            <span className={`text-xs font-medium ${statusDisplay.text}`}>{asset.status.replace("_", " ")}</span>
+            <span className={`text-xs font-medium ${statusDisplay.text}`}>{t(`assets.statuses.${asset.status}`, { defaultValue: asset.status })}</span>
           </span>
         </div>
         <div className="flex gap-2 flex-shrink-0">
@@ -97,7 +99,7 @@ export default function AssetDetailPage() {
             className="text-sm font-medium text-success hover:bg-success/10 px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex items-center gap-1.5 flex-1 sm:flex-none disabled:opacity-50"
           >
             <Check className="w-3.5 h-3.5" />
-            {renewAsset.isPending ? "Renewing..." : "Mark Renewed"}
+            {renewAsset.isPending ? t("assetDetail.renewing") : t("assetDetail.markRenewed")}
           </button>
           {editMode ? (
             <>
@@ -106,7 +108,7 @@ export default function AssetDetailPage() {
                 disabled={updateAsset.isPending}
                 className="text-sm font-medium text-success hover:bg-success/10 px-3 py-2 rounded-lg border border-border transition-colors duration-150 flex-1 sm:flex-none"
               >
-                {updateAsset.isPending ? "Saving..." : "Save"}
+                {updateAsset.isPending ? t("assetDetail.saving") : t("assetDetail.save")}
               </button>
               <button onClick={() => setEditMode(false)} className="text-sm text-muted-foreground hover:text-foreground px-3 py-2 rounded-lg border border-border transition-colors duration-150">
                 <X className="w-4 h-4" />
@@ -118,7 +120,7 @@ export default function AssetDetailPage() {
               className="text-sm font-medium text-foreground hover:bg-secondary px-3 md:px-4 py-2 rounded-lg border border-border transition-colors duration-150 flex items-center gap-1.5 flex-1 sm:flex-none"
             >
               <Pencil className="w-3.5 h-3.5" />
-              Edit
+              {t("assetDetail.edit")}
             </button>
           )}
           <button
@@ -137,29 +139,31 @@ export default function AssetDetailPage() {
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <div className="grid grid-cols-2 border-b border-border">
               <div className="p-4 md:p-6 border-r border-border">
-                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">Days Remaining</label>
+                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">{t("assetDetail.daysRemaining")}</label>
                 <p className={`text-4xl md:text-5xl font-bold mt-1 tabular-nums ${days < 0 ? "text-destructive" : colors.text}`}>
                   {days < 0 ? Math.abs(days) : String(days).padStart(2, "0")}
                 </p>
                 <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                  {days < 0 ? `${Math.abs(days)} days overdue` : `Due ${formatDate(asset.renewalDate)}`}
+                  {days < 0
+                    ? t("assetDetail.daysOverdue", { count: Math.abs(days) })
+                    : t("assetDetail.due", { date: formatDate(asset.renewalDate) })}
                 </p>
               </div>
               <div className="p-4 md:p-6">
-                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">Price</label>
+                <label className="text-[10px] uppercase font-medium text-muted-foreground tracking-wider">{t("assetDetail.price")}</label>
                 <p className="text-3xl md:text-4xl font-bold text-foreground mt-1 tabular-nums">
                   {asset.priceAmount ? `${asset.priceCurrency} ${parseFloat(asset.priceAmount).toFixed(2)}` : "—"}
                 </p>
                 <p className="text-xs md:text-sm text-muted-foreground mt-1">
                   {asset.renewalIntervalValue && asset.renewalIntervalUnit
-                    ? `per ${asset.renewalIntervalValue} ${asset.renewalIntervalUnit.toLowerCase()}`
-                    : "no interval set"}
+                    ? t("assetDetail.perInterval", { value: asset.renewalIntervalValue, unit: asset.renewalIntervalUnit.toLowerCase() })
+                    : t("assetDetail.noInterval")}
                 </p>
               </div>
             </div>
             <div className="p-4 md:p-6 grid grid-cols-2 gap-y-4 md:gap-y-5">
               <div>
-                <p className="text-[11px] text-muted-foreground font-medium">Vendor</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.vendor")}</p>
                 {editMode ? (
                   <input
                     type="text"
@@ -172,11 +176,11 @@ export default function AssetDetailPage() {
                 )}
               </div>
               <div>
-                <p className="text-[11px] text-muted-foreground font-medium">Project</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.project")}</p>
                 <p className="text-sm text-foreground mt-0.5">{asset.project?.name || "—"}</p>
               </div>
               <div>
-                <p className="text-[11px] text-muted-foreground font-medium">Assigned To</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.assignedTo")}</p>
                 {asset.assignedUser ? (
                   <div className="flex items-center gap-2 mt-0.5">
                     <div className="w-5 h-5 rounded-full bg-secondary text-[9px] flex items-center justify-center font-semibold text-foreground">
@@ -189,16 +193,16 @@ export default function AssetDetailPage() {
                 )}
               </div>
               <div>
-                <p className="text-[11px] text-muted-foreground font-medium">Auto-Renew</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.autoRenew")}</p>
                 <span className="flex items-center gap-1.5 mt-0.5">
                   <span className={`w-1.5 h-1.5 rounded-full ${asset.autoRenewEnabled ? "bg-success" : "bg-destructive"}`} />
                   <span className={`text-xs font-medium ${asset.autoRenewEnabled ? "text-success" : "text-destructive"}`}>
-                    {asset.autoRenewEnabled ? "Enabled" : "Disabled"}
+                    {asset.autoRenewEnabled ? t("assetDetail.enabled") : t("assetDetail.disabled")}
                   </span>
                 </span>
               </div>
               <div className="col-span-2">
-                <p className="text-[11px] text-muted-foreground font-medium">Notes</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.notes")}</p>
                 {editMode ? (
                   <textarea
                     value={editFields.notes}
@@ -211,23 +215,62 @@ export default function AssetDetailPage() {
                 )}
               </div>
               <div>
-                <p className="text-[11px] text-muted-foreground font-medium">Created</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.created")}</p>
                 <p className="text-sm text-foreground font-mono">{formatDate(asset.createdAt)}</p>
               </div>
               {asset.lastRenewedAt && (
                 <div>
-                  <p className="text-[11px] text-muted-foreground font-medium">Last Renewed</p>
+                  <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.lastRenewed")}</p>
                   <p className="text-sm text-foreground font-mono">{formatDate(asset.lastRenewedAt)}</p>
                 </div>
               )}
             </div>
           </div>
 
+          {asset.assetType === "CREDIT_CARD" && (
+            <div className="bg-card border border-border rounded-xl p-4 md:p-5">
+              <h3 className="text-sm font-medium text-foreground mb-3">{t("assetDetail.creditCardInfo")}</h3>
+              <div className="grid grid-cols-2 gap-y-3 text-sm">
+                <div>
+                  <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.bank")}</p>
+                  <p className="text-sm text-foreground mt-0.5">{asset.vendorName || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.last4")}</p>
+                  <p className="text-sm text-foreground mt-0.5 tracking-widest">
+                    {typeof asset.metadata?.last4 === "string" && asset.metadata.last4
+                      ? `**** ${asset.metadata.last4}`
+                      : "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.billingCycleDay")}</p>
+                  <p className="text-sm text-foreground mt-0.5">
+                    {typeof asset.metadata?.statementDay === "number"
+                      ? t("assetDetail.dayOfMonth", { day: asset.metadata.statementDay })
+                      : "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground font-medium">{t("assetDetail.dueDay")}</p>
+                  <p className="text-sm text-foreground mt-0.5">
+                    {typeof asset.metadata?.dueDay === "number"
+                      ? t("assetDetail.dayOfMonth", { day: asset.metadata.dueDay })
+                      : "—"}
+                  </p>
+                </div>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-4 pt-3 border-t border-border">
+                {t("assetDetail.creditCardAutoHelp")}
+              </p>
+            </div>
+          )}
+
           {/* Timeline */}
           <div className="bg-card border border-border rounded-xl p-4 md:p-5">
-            <h3 className="text-sm font-medium text-foreground mb-4">Renewal History</h3>
+            <h3 className="text-sm font-medium text-foreground mb-4">{t("assetDetail.renewalHistory")}</h3>
             {history.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No history yet.</p>
+              <p className="text-sm text-muted-foreground">{t("assetDetail.noHistory")}</p>
             ) : (
               <div className="space-y-0">
                 {history.map((event, i) => (
@@ -257,33 +300,33 @@ export default function AssetDetailPage() {
         {/* Right */}
         <div className="space-y-3 md:space-y-4">
           <div className="bg-card border border-border rounded-xl p-4 md:p-5">
-            <h3 className="text-sm font-medium text-foreground mb-2">Reminder Policy</h3>
+            <h3 className="text-sm font-medium text-foreground mb-2">{t("assetDetail.reminderPolicy")}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Default Policy — Notifications at 30, 14, 7, and 1 days before expiration.
+              {t("assetDetail.defaultPolicyDesc")}
             </p>
           </div>
 
           <div className="bg-card border border-border rounded-xl p-4 md:p-5">
-            <h3 className="text-sm font-medium text-foreground mb-3">Quick Actions</h3>
+            <h3 className="text-sm font-medium text-foreground mb-3">{t("assetDetail.quickActions")}</h3>
             <div className="space-y-1">
               <button
                 onClick={handleRenew}
                 disabled={renewAsset.isPending}
                 className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150"
               >
-                {renewAsset.isPending ? "Renewing..." : "Mark Renewed"}
+                {renewAsset.isPending ? t("assetDetail.renewing") : t("assetDetail.markRenewed")}
               </button>
               <button
                 onClick={handleEdit}
                 className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150"
               >
-                Edit Asset
+                {t("assetDetail.editAsset")}
               </button>
               <button
                 onClick={handleDelete}
                 className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors duration-150"
               >
-                Delete Asset
+                {t("assetDetail.deleteAsset")}
               </button>
             </div>
           </div>

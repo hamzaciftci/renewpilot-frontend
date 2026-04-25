@@ -1,19 +1,21 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Plus, MoreHorizontal, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Plus, MoreHorizontal, Search, Upload } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAssets, useDeleteAsset } from "@/hooks/useAssets";
 import { useProjects } from "@/hooks/useOrganization";
 import { formatDate, daysUntil, initials } from "@/lib/date";
-import { ASSET_TYPE_LABEL, ASSET_STATUS_DISPLAY, type AssetType, type AssetStatus } from "@/types";
+import { ASSET_STATUS_DISPLAY, type AssetType, type AssetStatus } from "@/types";
+import { CSVImportDialog } from "@/components/CSVImportDialog";
 
-const tabs: { label: string; type?: AssetType }[] = [
-  { label: "Tümü" },
-  { label: "Alan Adları", type: "DOMAIN" },
-  { label: "SSL", type: "SSL_CERTIFICATE" },
-  { label: "Sunucular", type: "SERVER" },
-  { label: "Hosting", type: "HOSTING_SERVICE" },
-  { label: "Lisanslar", type: "LICENSE" },
-  { label: "CDN", type: "CDN_SERVICE" },
+const TAB_DEFS: { key: string; type?: AssetType }[] = [
+  { key: "all" },
+  { key: "domains", type: "DOMAIN" },
+  { key: "ssl", type: "SSL_CERTIFICATE" },
+  { key: "servers", type: "SERVER" },
+  { key: "hosting", type: "HOSTING_SERVICE" },
+  { key: "licenses", type: "LICENSE" },
+  { key: "cdn", type: "CDN_SERVICE" },
 ];
 
 const typeColors: Record<string, string> = {
@@ -26,21 +28,32 @@ const typeColors: Record<string, string> = {
   CUSTOM: "text-muted-foreground",
 };
 
-const STATUS_TR: Record<string, string> = {
-  ACTIVE: "Aktif",
-  EXPIRING_SOON: "Yakında Sona Eriyor",
-  EXPIRED: "Süresi Doldu",
-  CANCELLED: "İptal Edildi",
-  ARCHIVED: "Arşivlendi",
-};
-
 export default function AssetsPage() {
-  const [activeTab, setActiveTab] = useState("Tümü");
-  const [search, setSearch] = useState("");
+  const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState("all");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [statusFilter, setStatusFilter] = useState("");
   const [projectFilter, setProjectFilter] = useState("");
+  const [csvOpen, setCsvOpen] = useState(false);
 
-  const activeType = tabs.find((t) => t.label === activeTab)?.type;
+  useEffect(() => {
+    const urlSearch = searchParams.get("search") ?? "";
+    if (urlSearch !== search) setSearch(urlSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
+    const urlSearch = searchParams.get("search") ?? "";
+    if (search && search !== urlSearch) {
+      setSearchParams((prev) => { prev.set("search", search); return prev; }, { replace: true });
+    } else if (!search && urlSearch) {
+      setSearchParams((prev) => { prev.delete("search"); return prev; }, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
+
+  const activeType = TAB_DEFS.find((tab) => tab.key === activeTab)?.type;
   const queryParams: Record<string, string> = {};
   if (activeType) queryParams.assetType = activeType;
   if (statusFilter) queryParams.status = statusFilter;
@@ -60,36 +73,47 @@ export default function AssetsPage() {
 
   return (
     <div className="space-y-4 md:space-y-6">
-      {/* Üst bar */}
+      {/* Top bar */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-0 border-b border-border overflow-x-auto scrollbar-none flex-1 min-w-0">
-          {tabs.map((tab) => (
+          {TAB_DEFS.map((tab) => (
             <button
-              key={tab.label}
-              onClick={() => setActiveTab(tab.label)}
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
               className={`text-sm font-medium px-3 md:px-4 py-2.5 border-b-2 transition-colors duration-150 whitespace-nowrap flex-shrink-0 ${
-                activeTab === tab.label
+                activeTab === tab.key
                   ? "text-foreground border-primary"
                   : "text-muted-foreground border-transparent hover:text-foreground"
               }`}
             >
-              {tab.label}{" "}
+              {t(`assets.tabs.${tab.key}`)}{" "}
               <span className="text-[10px] tabular-nums opacity-60">
                 {tab.type ? assets.filter((a) => a.assetType === tab.type).length : assets.length}
               </span>
             </button>
           ))}
         </div>
-        <Link
-          to="/assets/new"
-          className="bg-primary text-primary-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 flex items-center gap-2 flex-shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="hidden sm:inline">Varlık Ekle</span>
-        </Link>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            type="button"
+            onClick={() => setCsvOpen(true)}
+            className="border border-border bg-secondary/50 hover:bg-secondary text-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 flex items-center gap-2"
+            title={t("csvImport.buttonTitle")}
+          >
+            <Upload className="w-4 h-4" />
+            <span className="hidden sm:inline">{t("csvImport.importCSV")}</span>
+          </button>
+          <Link
+            to="/assets/new"
+            className="bg-primary text-primary-foreground px-3 md:px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">{t("assets.addAsset")}</span>
+          </Link>
+        </div>
       </div>
 
-      {/* Filtreler + Tablo */}
+      {/* Filters + Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="p-3 md:p-4 border-b border-border flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-between">
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
@@ -97,7 +121,7 @@ export default function AssetsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
               <input
                 type="text"
-                placeholder="Ara..."
+                placeholder={t("assets.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="text-sm border border-border rounded-lg pl-9 pr-4 py-1.5 w-48 md:w-64 bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors duration-150"
@@ -108,7 +132,7 @@ export default function AssetsPage() {
               onChange={(e) => setProjectFilter(e.target.value)}
               className="text-sm border border-border rounded-lg px-3 py-1.5 bg-secondary text-muted-foreground"
             >
-              <option value="">Tüm Projeler</option>
+              <option value="">{t("assets.allProjects")}</option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -118,38 +142,38 @@ export default function AssetsPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="text-sm border border-border rounded-lg px-3 py-1.5 bg-secondary text-muted-foreground"
             >
-              <option value="">Tüm Durumlar</option>
-              <option value="ACTIVE">Aktif</option>
-              <option value="EXPIRING_SOON">Yakında Sona Eriyor</option>
-              <option value="EXPIRED">Süresi Doldu</option>
-              <option value="ARCHIVED">Arşivlendi</option>
+              <option value="">{t("assets.allStatuses")}</option>
+              <option value="ACTIVE">{t("assets.statuses.ACTIVE")}</option>
+              <option value="EXPIRING_SOON">{t("assets.statuses.EXPIRING_SOON")}</option>
+              <option value="EXPIRED">{t("assets.statuses.EXPIRED")}</option>
+              <option value="ARCHIVED">{t("assets.statuses.ARCHIVED")}</option>
             </select>
           </div>
           <span className="text-[11px] text-muted-foreground tabular-nums whitespace-nowrap">
-            {isLoading ? "Yükleniyor…" : `${filtered.length} / ${assets.length} varlık`}
+            {isLoading ? t("assets.loadingAssets") : t("assets.counter", { filtered: filtered.length, total: assets.length })}
           </span>
         </div>
 
-        {/* Masaüstü tablo */}
+        {/* Desktop table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-border">
                 <th className="px-5 py-3 w-4"><input type="checkbox" className="rounded border-border accent-primary" /></th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Varlık Adı</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Tür</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Tedarikçi</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Proje</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Yenileme Tarihi</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Fiyat</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Durum</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Sahip</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground text-right">İşlemler</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.name")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.type")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.vendor")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.project")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.renewalDate")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.price")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.status")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("assets.table.owner")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground text-right">{t("assets.table.actions")}</th>
               </tr>
             </thead>
             <tbody>
-              {isLoading && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">Varlıklar yükleniyor…</td></tr>}
-              {!isLoading && filtered.length === 0 && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">Varlık bulunamadı.</td></tr>}
+              {isLoading && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">{t("assets.loadingAssets")}</td></tr>}
+              {!isLoading && filtered.length === 0 && <tr><td colSpan={10} className="px-5 py-8 text-center text-sm text-muted-foreground">{t("assets.noAssets")}</td></tr>}
               {filtered.map((asset) => {
                 const st = ASSET_STATUS_DISPLAY[asset.status as AssetStatus] ?? ASSET_STATUS_DISPLAY.ACTIVE;
                 const days = daysUntil(asset.renewalDate);
@@ -163,7 +187,7 @@ export default function AssetsPage() {
                     </td>
                     <td className="px-5 py-3">
                       <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[asset.assetType] || "text-muted-foreground"}`}>
-                        {ASSET_TYPE_LABEL[asset.assetType] ?? asset.assetType}
+                        {t(`assets.typeShort.${asset.assetType}`, { defaultValue: asset.assetType })}
                       </span>
                     </td>
                     <td className="px-5 py-3 text-sm text-muted-foreground">{asset.vendorName ?? "—"}</td>
@@ -172,7 +196,7 @@ export default function AssetsPage() {
                       <span className="text-sm tabular-nums text-foreground font-mono">{formatDate(asset.renewalDate)}</span>
                       {days <= 30 && (
                         <p className={`text-[10px] tabular-nums ${days < 0 ? "text-destructive" : days <= 7 ? "text-destructive" : "text-warning"}`}>
-                          {days < 0 ? `${Math.abs(days)}g geçti` : `${days}g kaldı`}
+                          {days < 0 ? t("assets.daysOverdue", { count: Math.abs(days) }) : t("assets.daysLeft", { count: days })}
                         </p>
                       )}
                     </td>
@@ -180,7 +204,7 @@ export default function AssetsPage() {
                     <td className="px-5 py-3">
                       <span className="flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
-                        <span className={`text-xs ${st.text}`}>{STATUS_TR[asset.status] ?? asset.status}</span>
+                        <span className={`text-xs ${st.text}`}>{t(`assets.statuses.${asset.status}`, { defaultValue: asset.status })}</span>
                       </span>
                     </td>
                     <td className="px-5 py-3">
@@ -189,7 +213,7 @@ export default function AssetsPage() {
                       </div>
                     </td>
                     <td className="px-5 py-3 text-right">
-                      <button onClick={() => { if (confirm(`"${asset.name}" silinsin mi?`)) deleteAsset.mutate(asset.id); }} className="text-muted-foreground hover:text-foreground transition-colors duration-150">
+                      <button onClick={() => { if (confirm(t("assetDetail.confirmDelete"))) deleteAsset.mutate(asset.id); }} className="text-muted-foreground hover:text-foreground transition-colors duration-150">
                         <MoreHorizontal className="w-4 h-4" strokeWidth={1.5} />
                       </button>
                     </td>
@@ -200,10 +224,10 @@ export default function AssetsPage() {
           </table>
         </div>
 
-        {/* Mobil kart listesi */}
+        {/* Mobile card list */}
         <div className="md:hidden divide-y divide-border">
-          {isLoading && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Varlıklar yükleniyor…</p>}
-          {!isLoading && filtered.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Varlık bulunamadı.</p>}
+          {isLoading && <p className="px-4 py-8 text-center text-sm text-muted-foreground">{t("assets.loadingAssets")}</p>}
+          {!isLoading && filtered.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">{t("assets.noAssets")}</p>}
           {filtered.map((asset) => {
             const st = ASSET_STATUS_DISPLAY[asset.status as AssetStatus] ?? ASSET_STATUS_DISPLAY.ACTIVE;
             const days = daysUntil(asset.renewalDate);
@@ -217,14 +241,14 @@ export default function AssetsPage() {
                     </Link>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[asset.assetType] || "text-muted-foreground"}`}>
-                        {ASSET_TYPE_LABEL[asset.assetType] ?? asset.assetType}
+                        {t(`assets.typeShort.${asset.assetType}`, { defaultValue: asset.assetType })}
                       </span>
                       {asset.vendorName && <span className="text-[10px] text-muted-foreground">· {asset.vendorName}</span>}
                     </div>
                   </div>
                   <span className="flex items-center gap-1.5 flex-shrink-0">
                     <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
-                    <span className={`text-xs ${st.text}`}>{STATUS_TR[asset.status] ?? asset.status}</span>
+                    <span className={`text-xs ${st.text}`}>{t(`assets.statuses.${asset.status}`, { defaultValue: asset.status })}</span>
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -233,7 +257,7 @@ export default function AssetsPage() {
                     {price && <span className="font-medium text-foreground">{price}</span>}
                     {days <= 30 && (
                       <span className={`font-medium ${days < 0 ? "text-destructive" : days <= 7 ? "text-destructive" : "text-warning"}`}>
-                        {days < 0 ? `${Math.abs(days)}g geçti` : `${days}g kaldı`}
+                        {days < 0 ? t("assets.daysOverdue", { count: Math.abs(days) }) : t("assets.daysLeft", { count: days })}
                       </span>
                     )}
                   </div>
@@ -244,13 +268,15 @@ export default function AssetsPage() {
         </div>
 
         <div className="px-4 md:px-5 py-3 border-t border-border flex items-center justify-between">
-          <span className="text-[11px] text-muted-foreground tabular-nums">{filtered.length} varlık</span>
+          <span className="text-[11px] text-muted-foreground tabular-nums">{t("assets.assetsCount", { count: filtered.length })}</span>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150 disabled:opacity-40" disabled>Önceki</button>
-            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150">Sonraki</button>
+            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150 disabled:opacity-40" disabled>{t("assets.prev")}</button>
+            <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted-foreground hover:bg-secondary transition-colors duration-150">{t("assets.next")}</button>
           </div>
         </div>
       </div>
+
+      <CSVImportDialog open={csvOpen} onClose={() => setCsvOpen(false)} />
     </div>
   );
 }

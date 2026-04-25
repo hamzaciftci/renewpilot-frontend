@@ -74,6 +74,7 @@ export type AssetType =
   | "LICENSE"
   | "HOSTING_SERVICE"
   | "CDN_SERVICE"
+  | "CREDIT_CARD"
   | "CUSTOM";
 
 export type AssetStatus =
@@ -234,6 +235,7 @@ export const ASSET_TYPE_LABEL: Record<AssetType, string> = {
   LICENSE: "LICENSE",
   HOSTING_SERVICE: "HOSTING",
   CDN_SERVICE: "CDN",
+  CREDIT_CARD: "CARD",
   CUSTOM: "CUSTOM",
 };
 
@@ -253,6 +255,7 @@ export const ASSET_TYPE_COLORS: Record<AssetType, string> = {
   LICENSE: "text-warning",
   HOSTING_SERVICE: "text-info",
   CDN_SERVICE: "text-success",
+  CREDIT_CARD: "text-warning",
   CUSTOM: "text-muted-foreground",
 };
 

@@ -1,7 +1,7 @@
 import { RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useUpcomingRenewals, useOverdueRenewals, useRenewAsset } from "@/hooks/useRenewals";
 import { formatDate, daysUntil, daysColor } from "@/lib/date";
-import { ASSET_TYPE_LABEL } from "@/types";
 
 const typeColors: Record<string, string> = {
   DOMAIN: "text-primary",
@@ -14,6 +14,7 @@ const typeColors: Record<string, string> = {
 };
 
 export default function RenewalsPage() {
+  const { t } = useTranslation();
   const { data: upcoming = [], isLoading } = useUpcomingRenewals(90);
   const { data: overdue = [] } = useOverdueRenewals();
   const renewAsset = useRenewAsset();
@@ -27,7 +28,7 @@ export default function RenewalsPage() {
     <div className="space-y-4 md:space-y-6">
       <div className="flex items-center gap-2">
         <RefreshCw className="w-4 h-4 text-primary" strokeWidth={1.5} />
-        <h2 className="text-lg font-semibold text-foreground">Upcoming Renewals</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("renewals.title")}</h2>
       </div>
 
       <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -36,20 +37,20 @@ export default function RenewalsPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-border">
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Asset</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Type</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Renewal Date</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Days Left</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">Price</th>
-                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground text-right">Action</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("renewals.table.asset")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("renewals.table.type")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("renewals.table.renewalDate")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("renewals.table.daysLeft")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground">{t("renewals.table.price")}</th>
+                <th className="px-5 py-3 text-[10px] uppercase tracking-wider font-medium text-muted-foreground text-right">{t("renewals.table.action")}</th>
               </tr>
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">Loading…</td></tr>
+                <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">{t("renewals.loading")}</td></tr>
               )}
               {!isLoading && all.length === 0 && (
-                <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">No upcoming renewals.</td></tr>
+                <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">{t("renewals.empty")}</td></tr>
               )}
               {all.map((r) => {
                 const days = daysUntil(r.renewalDate);
@@ -60,7 +61,7 @@ export default function RenewalsPage() {
                     <td className="px-5 py-3 text-sm font-medium text-foreground">{r.name}</td>
                     <td className="px-5 py-3">
                       <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[r.assetType] || "text-muted-foreground"}`}>
-                        {ASSET_TYPE_LABEL[r.assetType] ?? r.assetType}
+                        {t(`assets.typeShort.${r.assetType}`, { defaultValue: r.assetType })}
                       </span>
                     </td>
                     <td className="px-5 py-3 text-sm tabular-nums text-foreground font-mono">{formatDate(r.renewalDate)}</td>
@@ -68,7 +69,7 @@ export default function RenewalsPage() {
                       <span className="flex items-center gap-1.5">
                         <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
                         <span className={`text-xs font-medium tabular-nums ${text}`}>
-                          {days < 0 ? `${Math.abs(days)}d overdue` : `${days}d`}
+                          {days < 0 ? t("renewals.daysOverdue", { count: Math.abs(days) }) : t("renewals.daysLeft", { count: days })}
                         </span>
                       </span>
                     </td>
@@ -79,7 +80,7 @@ export default function RenewalsPage() {
                         disabled={renewAsset.isPending}
                         className="text-xs font-medium text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-colors duration-150 disabled:opacity-50"
                       >
-                        Renew
+                        {t("renewals.renew")}
                       </button>
                     </td>
                   </tr>
@@ -91,8 +92,8 @@ export default function RenewalsPage() {
 
         {/* Mobile cards */}
         <div className="md:hidden divide-y divide-border">
-          {isLoading && <p className="px-4 py-8 text-center text-sm text-muted-foreground">Loading…</p>}
-          {!isLoading && all.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">No upcoming renewals.</p>}
+          {isLoading && <p className="px-4 py-8 text-center text-sm text-muted-foreground">{t("renewals.loading")}</p>}
+          {!isLoading && all.length === 0 && <p className="px-4 py-8 text-center text-sm text-muted-foreground">{t("renewals.empty")}</p>}
           {all.map((r) => {
             const days = daysUntil(r.renewalDate);
             const { dot, text } = daysColor(days);
@@ -103,7 +104,7 @@ export default function RenewalsPage() {
                   <p className="text-sm font-medium text-foreground truncate">{r.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className={`text-[10px] font-mono font-semibold uppercase ${typeColors[r.assetType] || "text-muted-foreground"}`}>
-                      {ASSET_TYPE_LABEL[r.assetType] ?? r.assetType}
+                      {t(`assets.typeShort.${r.assetType}`, { defaultValue: r.assetType })}
                     </span>
                     {price && <span className="text-[10px] text-muted-foreground">· {price}</span>}
                   </div>
@@ -112,7 +113,7 @@ export default function RenewalsPage() {
                     <span className="flex items-center gap-1">
                       <span className={`w-1 h-1 rounded-full ${dot}`} />
                       <span className={`text-[10px] font-medium ${text}`}>
-                        {days < 0 ? `${Math.abs(days)}d overdue` : `${days}d left`}
+                        {days < 0 ? t("renewals.daysOverdue", { count: Math.abs(days) }) : t("renewals.daysLeft", { count: days })}
                       </span>
                     </span>
                   </div>
@@ -122,7 +123,7 @@ export default function RenewalsPage() {
                   disabled={renewAsset.isPending}
                   className="text-xs font-medium text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-colors duration-150 disabled:opacity-50 flex-shrink-0"
                 >
-                  Renew
+                  {t("renewals.renew")}
                 </button>
               </div>
             );

@@ -1,28 +1,34 @@
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { QuickAddFAB } from "./QuickAddFAB";
+import { WelcomeTour } from "./WelcomeTour";
 
-const pageTitles: Record<string, string> = {
-  "/dashboard": "Pano",
-  "/assets": "Varlıklar",
-  "/calendar": "Takvim",
-  "/renewals": "Yenilemeler",
-  "/team": "Ekip",
-  "/notifications": "Bildirimler",
-  "/billing": "Faturalandırma",
-  "/settings": "Ayarlar",
+const pageTitleKeys: Record<string, string> = {
+  "/dashboard": "nav.dashboard",
+  "/assets": "nav.assets",
+  "/calendar": "nav.calendar",
+  "/renewals": "nav.renewals",
+  "/reports": "nav.reports",
+  "/team": "nav.team",
+  "/notifications": "nav.notifications",
+  "/billing": "nav.billing",
+  "/settings": "nav.settings",
 };
 
 export function AppLayout() {
   const location = useLocation();
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const title =
-    Object.entries(pageTitles).find(([path]) =>
+  const titleKey =
+    Object.entries(pageTitleKeys).find(([path]) =>
       location.pathname.startsWith(path)
-    )?.[1] ?? "RenewPilot";
+    )?.[1];
+
+  const title = titleKey ? t(titleKey) : "RenewPilot";
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -48,6 +54,7 @@ export function AppLayout() {
       </div>
 
       <QuickAddFAB />
+      <WelcomeTour />
     </div>
   );
 }

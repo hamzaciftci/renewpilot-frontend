@@ -4,10 +4,11 @@ import { RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,18 +17,23 @@ export default function LoginPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (password.length < 8) {
+      setError(t("auth.register.passwordTooShort"));
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(email, password);
-      const redirect = sessionStorage.getItem("postLoginRedirect");
-      if (redirect) {
-        sessionStorage.removeItem("postLoginRedirect");
-        navigate(redirect, { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+      await register({ email, password, fullName, timezone });
+      navigate("/onboarding", { replace: true });
     } catch (err: unknown) {
-      const msg = (err as { message?: string })?.message ?? t("auth.login.invalidCredentials");
+      const errorObj = err as { message?: string; errors?: string[] };
+      const msg =
+        errorObj?.errors?.join(" ") ??
+        errorObj?.message ??
+        t("auth.register.createFailed");
       setError(msg);
     } finally {
       setLoading(false);
@@ -37,7 +43,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        {/* Logo */}
         <div className="flex items-center gap-2.5 justify-center mb-8">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <RefreshCw className="w-4 h-4 text-primary-foreground" strokeWidth={2} />
@@ -48,15 +53,30 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-card border border-border rounded-xl p-8">
-          <h1 className="text-lg font-semibold text-foreground mb-1">{t("auth.login.title")}</h1>
+          <h1 className="text-lg font-semibold text-foreground mb-1">{t("auth.register.title")}</h1>
           <p className="text-sm text-muted-foreground mb-6">
-            {t("auth.login.subtitle")}
+            {t("auth.register.subtitle")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-foreground block mb-1.5">
-                {t("auth.login.email")}
+                {t("auth.register.fullName")}
+              </label>
+              <input
+                type="text"
+                autoComplete="name"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder={t("auth.register.fullNamePlaceholder")}
+                className="w-full border border-border rounded-lg px-4 py-2.5 text-sm bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors duration-150"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground block mb-1.5">
+                {t("auth.register.email")}
               </label>
               <input
                 type="email"
@@ -64,22 +84,23 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={t("auth.login.emailPlaceholder")}
+                placeholder={t("auth.register.emailPlaceholder")}
                 className="w-full border border-border rounded-lg px-4 py-2.5 text-sm bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors duration-150"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium text-foreground block mb-1.5">
-                {t("auth.login.password")}
+                {t("auth.register.password")}
               </label>
               <input
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={t("auth.register.passwordPlaceholder")}
                 className="w-full border border-border rounded-lg px-4 py-2.5 text-sm bg-secondary text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors duration-150"
               />
             </div>
@@ -95,15 +116,15 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-primary text-primary-foreground py-2.5 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150 disabled:opacity-50"
             >
-              {loading ? t("auth.login.signingIn") : t("auth.login.signIn")}
+              {loading ? t("auth.register.creating") : t("auth.register.createAccount")}
             </button>
           </form>
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-4">
-          {t("auth.login.noAccount")}{" "}
-          <Link to="/register" className="text-primary hover:underline">
-            {t("auth.login.createAccount")}
+          {t("auth.register.hasAccount")}{" "}
+          <Link to="/login" className="text-primary hover:underline">
+            {t("auth.register.signIn")}
           </Link>
         </p>
       </div>

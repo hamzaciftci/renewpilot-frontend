@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useRenewalCalendar } from "@/hooks/useRenewals";
-import { ASSET_TYPE_LABEL } from "@/types";
 import { daysUntil } from "@/lib/date";
-
-const MONTH_NAMES = [
-  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık",
-];
-
-const DAY_NAMES = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
 
 function getSeverity(renewalDate: string): "red" | "amber" | "blue" | "green" {
   const days = daysUntil(renewalDate);
@@ -26,19 +19,22 @@ const dotColors = {
   green: "bg-success",
 };
 
-const legendItems = [
-  { label: "Süresi Geçmiş", color: "bg-destructive" },
-  { label: "Yaklaşan (30g)", color: "bg-warning" },
-  { label: "Planlanan", color: "bg-primary" },
-];
-
 export default function CalendarPage() {
+  const { t } = useTranslation();
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const { data: assets = [], isLoading } = useRenewalCalendar(year, month);
+
+  const legendItems = [
+    { label: t("calendar.legend.expired"), color: "bg-destructive" },
+    { label: t("calendar.legend.upcoming"), color: "bg-warning" },
+    { label: t("calendar.legend.scheduled"), color: "bg-primary" },
+  ];
+
+  const dayNames = [0, 1, 2, 3, 4, 5, 6].map((i) => t(`calendar.daysShort.${i}`));
 
   const prevMonth = () => {
     if (month === 1) { setMonth(12); setYear(y => y - 1); }
@@ -71,7 +67,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold text-foreground">
-            {MONTH_NAMES[month - 1]} {year}
+            {t(`calendar.months.${month - 1}`)} {year}
           </h2>
           <div className="flex items-center gap-0.5">
             <button onClick={prevMonth} className="p-1 rounded hover:bg-secondary transition-colors duration-150">
@@ -85,7 +81,7 @@ export default function CalendarPage() {
             onClick={() => { setYear(today.getFullYear()); setMonth(today.getMonth() + 1); setSelectedDay(null); }}
             className="text-xs text-primary font-medium hover:text-primary/80 transition-colors"
           >
-            Bugün
+            {t("calendar.today")}
           </button>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
@@ -101,11 +97,11 @@ export default function CalendarPage() {
       <div className="flex flex-col lg:flex-row gap-4 md:gap-5">
         <div className="flex-1 bg-card border border-border rounded-xl overflow-hidden">
           {isLoading ? (
-            <div className="h-64 flex items-center justify-center text-sm text-muted-foreground">Yükleniyor...</div>
+            <div className="h-64 flex items-center justify-center text-sm text-muted-foreground">{t("calendar.loading")}</div>
           ) : (
             <>
               <div className="grid grid-cols-7">
-                {DAY_NAMES.map((d) => (
+                {dayNames.map((d) => (
                   <div key={d} className="px-1 md:px-2 py-2.5 text-center text-[10px] uppercase font-medium text-muted-foreground tracking-wider border-b border-border">
                     {d}
                   </div>
@@ -159,7 +155,7 @@ export default function CalendarPage() {
           <div className="lg:w-64 bg-card border border-border rounded-xl p-4 self-start">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-medium text-foreground">
-                {selectedDay} {MONTH_NAMES[month - 1]} {year}
+                {selectedDay} {t(`calendar.months.${month - 1}`)} {year}
               </h3>
               <button onClick={() => setSelectedDay(null)} className="text-muted-foreground hover:text-foreground transition-colors">
                 <X className="w-3.5 h-3.5" />
@@ -176,11 +172,15 @@ export default function CalendarPage() {
                       <div className="min-w-0">
                         <p className="text-xs font-medium text-foreground truncate">{asset.name}</p>
                         <p className="text-[10px] text-muted-foreground">
-                          {ASSET_TYPE_LABEL[asset.assetType] ?? asset.assetType}
+                          {t(`assets.typeShort.${asset.assetType}`, { defaultValue: asset.assetType })}
                           {asset.project && <span> · {asset.project.name}</span>}
                         </p>
                         <p className={`text-[10px] font-medium ${sev === "red" ? "text-destructive" : sev === "amber" ? "text-warning" : "text-primary"}`}>
-                          {days < 0 ? `${Math.abs(days)} gün geçti` : days === 0 ? "Bugün!" : `${days} gün kaldı`}
+                          {days < 0
+                            ? t("calendar.daysOverdue", { count: Math.abs(days) })
+                            : days === 0
+                              ? t("calendar.todayExclam")
+                              : t("calendar.daysLeft", { count: days })}
                         </p>
                       </div>
                     </div>
@@ -188,7 +188,7 @@ export default function CalendarPage() {
                 })}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground">Bu günde yenileme yok.</p>
+              <p className="text-xs text-muted-foreground">{t("calendar.noRenewalsDay")}</p>
             )}
           </div>
         )}
