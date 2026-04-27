@@ -363,6 +363,73 @@ export const invitationsApi = {
     api.post<{ message: string; organizationId: string }>(`/invitations/${token}/accept`),
 };
 
+// ─── Asset Share Link endpoints ───────────────────────────────────────────────
+
+export interface AssetShareLinkSummary {
+  id: string;
+  label: string | null;
+  expiresAt: string | null;
+  revokedAt: string | null;
+  viewCount: number;
+  lastViewedAt: string | null;
+  createdAt: string;
+  createdByUserId: string;
+  createdBy: { fullName: string; email: string } | null;
+}
+
+export interface AssetShareLinkCreated {
+  id: string;
+  label: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+  /** Plaintext token — shown only once on creation. Never returned again. */
+  token: string;
+}
+
+export interface PublicSharedAsset {
+  label: string | null;
+  organizationName: string;
+  asset: {
+    name: string;
+    assetType: string;
+    vendorName: string | null;
+    renewalDate: string;
+    renewalIntervalUnit: string | null;
+    renewalIntervalValue: number | null;
+    status: string;
+    priceAmount: string | null;
+    priceCurrency: string;
+    notes: string | null;
+    domain: { domainName: string | null; registrar: string | null; autoRenew: boolean } | null;
+    sslCertificate: { commonName: string | null; issuer: string | null; validTo: string | null } | null;
+    license: { softwareName: string | null; licenseType: string | null; seatCount: number | null } | null;
+    hostingService: { provider: string | null; planName: string | null } | null;
+    cdnService: { provider: string | null; planName: string | null } | null;
+    server: { provider: string | null; hostname: string | null; region: string | null } | null;
+  };
+}
+
+export const shareLinksApi = {
+  list: (orgId: string, assetId: string) =>
+    api.get<AssetShareLinkSummary[]>(
+      `/organizations/${orgId}/assets/${assetId}/share-links`,
+    ),
+
+  create: (orgId: string, assetId: string, body: { label?: string; expiresAt?: string }) =>
+    api.post<AssetShareLinkCreated>(
+      `/organizations/${orgId}/assets/${assetId}/share-links`,
+      body,
+    ),
+
+  revoke: (orgId: string, assetId: string, linkId: string) =>
+    api.delete<void>(
+      `/organizations/${orgId}/assets/${assetId}/share-links/${linkId}`,
+    ),
+
+  /** Public — token IS the secret. Used by the /share/:token page. */
+  resolve: (token: string) => api.get<PublicSharedAsset>(`/share/${token}`),
+};
+
 // ─── Billing endpoints ────────────────────────────────────────────────────────
 
 export const billingApi = {

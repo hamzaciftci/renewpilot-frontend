@@ -27,6 +27,7 @@ const BillingPage = lazy(() => import("@/pages/BillingPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
 const AcceptInvitePage = lazy(() => import("@/pages/AcceptInvitePage"));
+const SharedAssetPage = lazy(() => import("@/pages/SharedAssetPage"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -89,6 +90,7 @@ const App = () => (
 
               {/* Public routes (accessible whether logged in or not) */}
               <Route path="/invite/:token" element={<AcceptInvitePage />} />
+              <Route path="/share/:token" element={<SharedAssetPage />} />
 
               {/* Guest-only routes */}
               <Route element={<GuestRoute />}>

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ChevronRight, Pencil, Check, Trash2, X } from "lucide-react";
+import { ChevronRight, Pencil, Check, Trash2, X, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAsset, useAssetHistory, useUpdateAsset, useDeleteAsset } from "@/hooks/useAssets";
 import { useRenewAsset } from "@/hooks/useRenewals";
 import { ASSET_STATUS_DISPLAY } from "@/types";
 import { formatDate, daysUntil, daysColor, initials } from "@/lib/date";
+import { ShareLinkDialog } from "@/components/ShareLinkDialog";
 
 export default function AssetDetailPage() {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ export default function AssetDetailPage() {
 
   const [editMode, setEditMode] = useState(false);
   const [editFields, setEditFields] = useState({ notes: "", vendorName: "" });
+  const [shareOpen, setShareOpen] = useState(false);
 
   const handleEdit = () => {
     if (!asset) return;
@@ -323,6 +325,13 @@ export default function AssetDetailPage() {
                 {t("assetDetail.editAsset")}
               </button>
               <button
+                onClick={() => setShareOpen(true)}
+                className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-150 flex items-center gap-2"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                {t("assetDetail.shareLink")}
+              </button>
+              <button
                 onClick={handleDelete}
                 className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors duration-150"
               >
@@ -332,6 +341,8 @@ export default function AssetDetailPage() {
           </div>
         </div>
       </div>
+
+      <ShareLinkDialog assetId={id!} open={shareOpen} onClose={() => setShareOpen(false)} />
     </div>
   );
 }
