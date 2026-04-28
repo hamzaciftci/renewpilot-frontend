@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Link2, ShieldAlert, Building2, Calendar, Tag, AlertCircle } from "lucide-react";
+import { ShieldAlert, Building2, Calendar, Tag, AlertCircle } from "lucide-react";
 import { shareLinksApi } from "@/lib/api";
 import { formatDate, daysUntil } from "@/lib/date";
+import { Logo } from "@/components/Logo";
 
 /**
  * Public, unauthenticated page rendered when someone opens a /share/:token URL.
@@ -66,10 +67,7 @@ export default function SharedAssetPage() {
       {/* Minimal top bar — no nav, just attribution */}
       <header className="border-b border-border bg-card">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-primary" />
-            <span className="text-sm font-semibold text-foreground">RenewPilot</span>
-          </div>
+          <Logo size="sm" />
           <span className="text-[11px] text-muted-foreground uppercase tracking-wider">
             {t("publicShare.readOnlyBadge")}
           </span>

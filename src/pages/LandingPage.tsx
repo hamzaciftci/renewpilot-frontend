@@ -15,15 +15,15 @@ import {
   Server,
   Lock,
   Check,
-  Calendar,
-  LayoutDashboard,
-  Settings as SettingsIcon,
   Eye,
   AlertTriangle,
-  CreditCard,
+  PlusCircle,
+  SlidersHorizontal,
+  BellRing,
 } from "lucide-react";
 import i18n, { SUPPORTED_LANGUAGES, type SupportedLanguageCode } from "@/i18n";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Logo } from "@/components/Logo";
 
 /**
  * Public landing page rendered at "/". Authenticated users are redirected
@@ -48,6 +48,7 @@ export default function LandingPage() {
         <Hero />
         <SocialProof />
         <PainPoints />
+        <HowItWorks />
         <FeatureGrid />
         <FeatureBlock
           eyebrow={t("landing.featureBlocks.assets.eyebrow")}
@@ -105,9 +106,8 @@ function TopNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-foreground">
-          <Link2 className="w-4 h-4 text-primary" />
-          <span className="text-sm font-semibold tracking-tight">RenewPilot</span>
+        <Link to="/" className="flex items-center gap-2 text-foreground" aria-label="RenewPilot">
+          <Logo size="sm" />
           <span className="text-[10px] font-mono uppercase text-primary border border-primary/40 rounded px-1.5 py-0.5 ml-1">
             {t("landing.betaBadge")}
           </span>
@@ -251,10 +251,10 @@ function Hero() {
 function SocialProof() {
   const { t } = useTranslation();
   const stats = [
-    { value: "10K+", label: t("landing.stats.assets") },
-    { value: "5", label: t("landing.stats.languages") },
+    { value: "7", label: t("landing.stats.types") },
     { value: "5", label: t("landing.stats.channels") },
-    { value: "99.9%", label: t("landing.stats.uptime") },
+    { value: "5", label: t("landing.stats.languages") },
+    { value: "<2 min", label: t("landing.stats.setup") },
   ];
   return (
     <section className="border-b border-border bg-card/30">
@@ -324,6 +324,57 @@ function PainPoints() {
                   <span>{solution}</span>
                 </p>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── How it works ─────────────────────────────────────────────────────────────
+
+function HowItWorks() {
+  const { t } = useTranslation();
+  const steps = [
+    { icon: PlusCircle, key: "add" },
+    { icon: SlidersHorizontal, key: "policy" },
+    { icon: BellRing, key: "ping" },
+  ] as const;
+  return (
+    <section className="py-12 md:py-20 border-b border-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+          <p className="text-[11px] uppercase tracking-wider font-medium text-primary mb-2">
+            {t("landing.how.eyebrow")}
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+            {t("landing.how.heading")}
+          </h2>
+          <p className="text-muted-foreground mt-3 text-sm md:text-base">
+            {t("landing.how.subheading")}
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-4 md:gap-5 relative">
+          {steps.map(({ icon: Icon, key }, idx) => (
+            <div
+              key={key}
+              className="bg-card border border-border rounded-xl p-5 md:p-6 relative"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="font-mono text-[11px] text-primary border border-primary/30 rounded-md px-1.5 py-0.5">
+                  0{idx + 1}
+                </span>
+                <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                  <Icon className="w-4 h-4" />
+                </div>
+              </div>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                {t(`landing.how.${key}.title`)}
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {t(`landing.how.${key}.desc`)}
+              </p>
             </div>
           ))}
         </div>
@@ -516,45 +567,32 @@ function TrustSignals() {
 
 function ClosingCTA() {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
   return (
     <section className="py-16 md:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="bg-card border border-border rounded-2xl p-8 md:p-12 text-center space-y-6">
-          <div className="inline-flex w-12 h-12 rounded-xl bg-primary/10 text-primary items-center justify-center mx-auto">
-            <LayoutDashboard className="w-5 h-5" />
-          </div>
+          <Logo size="lg" showWordmark={false} className="mx-auto" />
           <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
             {t("landing.cta.heading")}
           </h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto">
             {t("landing.cta.subheading")}
           </p>
-          <form
-            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto pt-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const url = email
-                ? `/register?email=${encodeURIComponent(email)}`
-                : "/register";
-              window.location.href = url;
-            }}
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("landing.cta.emailPlaceholder")}
-              className="flex-1 bg-background border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2 justify-center">
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg text-sm font-medium transition-colors"
             >
               {t("landing.cta.button")}
-            </button>
-          </form>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center text-foreground hover:bg-secondary border border-border px-6 py-3 rounded-lg text-sm font-medium transition-colors"
+            >
+              {t("landing.cta.signIn")}
+            </Link>
+          </div>
           <p className="text-xs text-muted-foreground">{t("landing.cta.disclaimer")}</p>
         </div>
       </div>
@@ -602,10 +640,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-14">
         <div className="grid sm:grid-cols-2 md:grid-cols-5 gap-8">
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <Link2 className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold">RenewPilot</span>
-            </div>
+            <Logo size="sm" />
             <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
               {t("landing.footer.tagline")}
             </p>

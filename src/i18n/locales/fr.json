@@ -845,17 +845,34 @@
     "hero": {
       "eyebrow": "Gratuit pendant la beta",
       "title": "Ne ratez plus jamais un renouvellement.",
-      "subtitle": "Suivez chaque domaine, certificat SSL, licence, plan d'hébergement et carte bancaire au même endroit — et soyez prévenu sur tous les canaux avant l'expiration.",
-      "ctaPrimary": "Commencer",
+      "subtitle": "Un seul espace pour chaque domaine, certificat SSL, licence et date de renouvellement dont dépend votre activité. Alerté sur tous les canaux avant qu'il n'expire.",
+      "ctaPrimary": "Démarrer gratuitement",
       "ctaSecondary": "Voir les fonctionnalités",
-      "noCard": "Aucune carte requise",
+      "noCard": "Sans carte · 5 langues · auto-installation",
       "imageAlt": "Tableau de bord RenewPilot avec compte à rebours de renouvellement et expirations à venir"
     },
     "stats": {
-      "assets": "Actifs suivis",
-      "languages": "Langues",
+      "types": "Types d'actifs",
       "channels": "Canaux de rappel",
-      "uptime": "SLA de disponibilité"
+      "languages": "Langues",
+      "setup": "Jusqu'au premier rappel"
+    },
+    "how": {
+      "eyebrow": "Comment ça marche",
+      "heading": "De la panique du tableur au calme en trois étapes",
+      "subheading": "Pas d'agent à installer. Pas de vendor lock-in. Apportez vos renouvellements, repartez avec votre tranquillité.",
+      "add": {
+        "title": "Ajoutez vos actifs",
+        "desc": "Collez un domaine — nous récupérons le registraire et l'expiration via WHOIS. Ajoutez un SSL — nous lisons le validTo. Import CSV pour le reste."
+      },
+      "policy": {
+        "title": "Définissez la politique une fois",
+        "desc": "Choisissez les canaux, les délais (30/14/7/1 par défaut) et les destinataires. Enregistré et appliqué à chaque nouvel actif."
+      },
+      "ping": {
+        "title": "Nous faisons les relances",
+        "desc": "Les rappels partent par email, SMS, WhatsApp, web push et in-app. Vous le saurez des semaines à l'avance, pas le matin même."
+      }
     },
     "pains": {
       "heading": "Le coût d'une seule date manquée",
@@ -942,31 +959,31 @@
       "subheading": "RenewPilot existe en anglais, turc, allemand, français et espagnol — interface et notifications."
     },
     "trust": {
-      "heading": "Conçu en pensant à vos données",
-      "subheading": "Des valeurs par défaut sensées qui ne nécessitent pas de revue de sécurité.",
+      "heading": "Sans surprise, dès la conception",
+      "subheading": "Des choix qu'un acheteur technique peut valider en une seule lecture.",
       "encryption": {
-        "title": "Chiffré au repos",
-        "desc": "PostgreSQL avec TLS en transit. Les jetons sont stockés sous forme de hachages SHA-256."
+        "title": "Aucun secret en clair",
+        "desc": "Les jetons de partage sont stockés en hachage SHA-256 — l'original ne vous est montré qu'une seule fois. Mots de passe en bcrypt cost 12."
       },
       "isolation": {
-        "title": "Isolation stricte par organisation",
-        "desc": "Chaque requête est limitée à votre organisation. Les recherches inter-tenants renvoient 404, jamais 403."
+        "title": "Frontière stricte par tenant",
+        "desc": "Chaque requête est limitée à votre organisation. Les recherches inter-orgs renvoient 404, jamais 403 — l'existence ne peut pas être sondée."
       },
       "hosting": {
-        "title": "Infrastructure hébergée en UE",
-        "desc": "Tourne sur Vercel + Neon (Francfort). Traitement des données conforme au RGPD par défaut."
+        "title": "Hébergement UE par défaut",
+        "desc": "Sur Vercel + Neon Postgres à Francfort. TLS en transit, chiffrement au repos, traitement conforme au RGPD."
       },
       "audit": {
-        "title": "Prêt pour l'audit",
-        "desc": "Chaque renouvellement, invitation et changement d'accès est journalisé et exportable."
+        "title": "Vos données, exportables",
+        "desc": "Chaque renouvellement, invitation et changement d'accès est journalisé. Export JSON/CSV des actifs et de l'historique à tout moment."
       }
     },
     "cta": {
-      "heading": "Commencez à suivre vos renouvellements en moins de 2 minutes",
-      "subheading": "Créez un workspace, ajoutez votre premier actif, recevez votre premier rappel. Pas de carte, pas d'appel de configuration.",
-      "emailPlaceholder": "vous@entreprise.com",
-      "button": "Créer un compte",
-      "disclaimer": "Gratuit pendant la beta. Annulez à tout moment — vos données restent exportables."
+      "heading": "Sortez le calendrier de vos épaules.",
+      "subheading": "Créez un workspace, ajoutez votre premier actif, recevez votre premier rappel. Gratuit pendant la beta — pas de carte, pas d'appel.",
+      "button": "Créer mon workspace",
+      "signIn": "Se connecter à la place",
+      "disclaimer": "Annulez à tout moment · vos données restent exportables · self-hosting sur demande"
     },
     "footer": {
       "tagline": "Le tracker de renouvellement bâti par des opérateurs lassés des dates manquées.",

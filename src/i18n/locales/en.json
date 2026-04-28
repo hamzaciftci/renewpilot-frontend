@@ -845,17 +845,34 @@
     "hero": {
       "eyebrow": "Free during beta",
       "title": "Never miss another renewal.",
-      "subtitle": "Track every domain, SSL certificate, license, hosting plan and credit card in one place — and get reminded across every channel before they expire.",
-      "ctaPrimary": "Get started",
+      "subtitle": "One workspace for every domain, SSL cert, license and renewal date your business depends on. Pinged across every channel before they lapse.",
+      "ctaPrimary": "Start free",
       "ctaSecondary": "See features",
-      "noCard": "No credit card required",
+      "noCard": "No credit card · 5 languages · self-serve",
       "imageAlt": "RenewPilot dashboard showing renewal countdowns and upcoming expirations"
     },
     "stats": {
-      "assets": "Assets tracked",
-      "languages": "Languages",
+      "types": "Asset types",
       "channels": "Reminder channels",
-      "uptime": "Uptime SLA"
+      "languages": "Languages",
+      "setup": "To first reminder"
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "heading": "From spreadsheet panic to calm in three steps",
+      "subheading": "No agents to install. No vendor lock-in. Bring your renewals, leave with your sanity.",
+      "add": {
+        "title": "Add your assets",
+        "desc": "Paste a domain and we pull the registrar and expiry via WHOIS. Add an SSL cert and we read the validTo. CSV import for everything else."
+      },
+      "policy": {
+        "title": "Set the policy once",
+        "desc": "Pick the channels, the lead times (30/14/7/1 by default), and who gets pinged. Saved and reused for every new asset."
+      },
+      "ping": {
+        "title": "We do the chasing",
+        "desc": "Reminders go out on email, SMS, WhatsApp, web push and in-app. You'll know weeks ahead, not the morning of."
+      }
     },
     "pains": {
       "heading": "The cost of one missed date",
@@ -942,31 +959,31 @@
       "subheading": "RenewPilot ships in English, Turkish, German, French and Spanish — UI and notifications both."
     },
     "trust": {
-      "heading": "Built with your data in mind",
-      "subheading": "Sensible defaults that don't require a security review.",
+      "heading": "Engineered without surprises",
+      "subheading": "Decisions that the technical buyer can sign off in one read-through.",
       "encryption": {
-        "title": "Encrypted at rest",
-        "desc": "PostgreSQL with TLS in transit. Tokens stored as SHA-256 hashes."
+        "title": "Plaintext-zero secrets",
+        "desc": "Share-link tokens stored as SHA-256 hashes — the original is shown to you exactly once. Passwords bcrypted with cost 12."
       },
       "isolation": {
-        "title": "Strict org isolation",
-        "desc": "Every query is scoped to your organization. Cross-tenant lookups return 404, never 403."
+        "title": "Hard tenant boundary",
+        "desc": "Every query is scoped to your organization. Cross-org lookups return a 404, never a 403, so existence can't be probed."
       },
       "hosting": {
-        "title": "EU-hosted infrastructure",
-        "desc": "Runs on Vercel + Neon (Frankfurt). GDPR-aware data handling by default."
+        "title": "EU-hosted by default",
+        "desc": "Runs on Vercel + Neon Postgres in Frankfurt. TLS in transit, encryption at rest, GDPR-aware data handling."
       },
       "audit": {
-        "title": "Audit-ready",
-        "desc": "Every renewal, invite and access change is logged and exportable."
+        "title": "Yours to export",
+        "desc": "Every renewal, invitation and access change is logged. JSON/CSV export for assets and history at any time."
       }
     },
     "cta": {
-      "heading": "Start tracking renewals in under 2 minutes",
-      "subheading": "Create a workspace, add your first asset, get your first reminder. No card, no setup call.",
-      "emailPlaceholder": "you@company.com",
-      "button": "Create account",
-      "disclaimer": "Free during beta. Cancel anytime — your data stays exportable."
+      "heading": "Take the calendar off your shoulders.",
+      "subheading": "Create a workspace, add your first asset, get your first reminder. Free during beta — no card, no setup call.",
+      "button": "Create your workspace",
+      "signIn": "Sign in instead",
+      "disclaimer": "Cancel anytime · your data stays exportable · self-hostable on request"
     },
     "footer": {
       "tagline": "The renewal tracker built by operators tired of missed dates.",

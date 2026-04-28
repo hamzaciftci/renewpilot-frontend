@@ -845,17 +845,34 @@
     "hero": {
       "eyebrow": "Beta süresince ücretsiz",
       "title": "Hiçbir yenilemeyi kaçırma.",
-      "subtitle": "Domain, SSL sertifikası, lisans, hosting planı ve kredi kartlarını tek yerden takip et — son kullanma tarihi yaklaşmadan her kanaldan haber al.",
-      "ctaPrimary": "Hemen başla",
+      "subtitle": "İşinin bağlı olduğu her domain, SSL sertifikası, lisans ve yenileme tarihini tek workspace'te tut. Süresi bitmeden her kanaldan haber al.",
+      "ctaPrimary": "Ücretsiz başla",
       "ctaSecondary": "Özellikleri gör",
-      "noCard": "Kredi kartı gerekmez",
+      "noCard": "Kredi kartı yok · 5 dil · kendin kur",
       "imageAlt": "RenewPilot panosu yenileme geri sayımları ve yaklaşan son kullanma tarihleri ile"
     },
     "stats": {
-      "assets": "Takip edilen varlık",
-      "languages": "Dil",
+      "types": "Varlık tipi",
       "channels": "Hatırlatma kanalı",
-      "uptime": "Çalışma süresi"
+      "languages": "Dil",
+      "setup": "İlk hatırlatmaya"
+    },
+    "how": {
+      "eyebrow": "Nasıl çalışır",
+      "heading": "Excel paniğinden sakinliğe üç adımda",
+      "subheading": "Kurulacak agent yok. Vendor lock-in yok. Yenilemelerini getir, huzurla çık.",
+      "add": {
+        "title": "Varlıklarını ekle",
+        "desc": "Domain yapıştır — registrar ve son kullanma tarihini WHOIS ile çekiyoruz. SSL ekle — validTo'yu okuruz. Diğer her şey için CSV import."
+      },
+      "policy": {
+        "title": "Politikayı bir kez ayarla",
+        "desc": "Kanalları, süreleri (varsayılan 30/14/7/1) ve kimin uyarılacağını seç. Kaydet ve her yeni varlığa otomatik uygulansın."
+      },
+      "ping": {
+        "title": "Takibi biz yaparız",
+        "desc": "Hatırlatmalar email, SMS, WhatsApp, web push ve uygulama içinden gider. Süre dolduğu sabah değil, haftalar öncesinden bilirsin."
+      }
     },
     "pains": {
       "heading": "Tek bir kaçırılan tarihin maliyeti",
@@ -942,31 +959,31 @@
       "subheading": "RenewPilot İngilizce, Türkçe, Almanca, Fransızca ve İspanyolca olarak gelir — hem arayüz hem bildirimler."
     },
     "trust": {
-      "heading": "Verini düşünerek inşa edildi",
-      "subheading": "Güvenlik incelemesi gerektirmeyen mantıklı varsayılanlar.",
+      "heading": "Sürpriz yok diye tasarlandı",
+      "subheading": "Teknik karar vericinin tek okumada onaylayabileceği seçimler.",
       "encryption": {
-        "title": "Disk üzerinde şifreli",
-        "desc": "Aktarımda TLS ile PostgreSQL. Token'lar SHA-256 hash olarak saklanır."
+        "title": "Plaintext sıfır",
+        "desc": "Paylaşım linki token'ları SHA-256 hash olarak saklanır — orijinal sana yalnızca bir kez gösterilir. Şifreler bcrypt cost 12."
       },
       "isolation": {
-        "title": "Sıkı organizasyon izolasyonu",
-        "desc": "Her sorgu organizasyonuna kapsamlandırılır. Çapraz tenant aramalar 403 değil 404 döner."
+        "title": "Sert tenant sınırı",
+        "desc": "Her sorgu organizasyonuna kapsamlandırılır. Çapraz organizasyon aramaları 403 değil 404 döner — varlık tahmin edilemez."
       },
       "hosting": {
-        "title": "AB merkezli altyapı",
-        "desc": "Vercel + Neon (Frankfurt) üzerinde çalışır. KVKK/GDPR uyumlu varsayılan veri işleme."
+        "title": "Varsayılan AB barındırma",
+        "desc": "Vercel + Neon Postgres üzerinde Frankfurt'ta çalışır. Aktarımda TLS, diskte şifreleme, KVKK/GDPR uyumlu işleme."
       },
       "audit": {
-        "title": "Denetime hazır",
-        "desc": "Her yenileme, davet ve erişim değişikliği loglanır ve dışa aktarılabilir."
+        "title": "Veriler her zaman senin",
+        "desc": "Her yenileme, davet ve erişim değişikliği loglanır. Varlık ve geçmiş için dilediğin an JSON/CSV export."
       }
     },
     "cta": {
-      "heading": "2 dakikadan az sürede yenileme takibine başla",
-      "subheading": "Bir workspace oluştur, ilk varlığını ekle, ilk hatırlatmanı al. Kart yok, kurulum görüşmesi yok.",
-      "emailPlaceholder": "sen@sirket.com",
-      "button": "Hesap oluştur",
-      "disclaimer": "Beta süresince ücretsiz. İstediğin zaman iptal — verin her zaman dışa aktarılabilir."
+      "heading": "Takvimi omuzlarından al.",
+      "subheading": "Bir workspace oluştur, ilk varlığını ekle, ilk hatırlatmayı al. Beta süresince ücretsiz — kart yok, kurulum görüşmesi yok.",
+      "button": "Workspace oluştur",
+      "signIn": "Giriş yap",
+      "disclaimer": "İstediğin zaman iptal · verin her zaman dışa aktarılabilir · talep üzerine self-host"
     },
     "footer": {
       "tagline": "Kaçırılan tarihlerden bıkmış operatörlerin inşa ettiği yenileme takipçisi.",

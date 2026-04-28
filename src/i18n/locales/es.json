@@ -845,17 +845,34 @@
     "hero": {
       "eyebrow": "Gratis durante la beta",
       "title": "Nunca vuelvas a perder una renovación.",
-      "subtitle": "Sigue cada dominio, certificado SSL, licencia, plan de hosting y tarjeta de crédito en un solo lugar — y recibe avisos por todos los canales antes de que caduquen.",
-      "ctaPrimary": "Empezar",
+      "subtitle": "Un único espacio para cada dominio, certificado SSL, licencia y fecha de renovación de la que depende tu negocio. Avisado por todos los canales antes de que caduque.",
+      "ctaPrimary": "Empezar gratis",
       "ctaSecondary": "Ver funciones",
-      "noCard": "Sin tarjeta de crédito",
+      "noCard": "Sin tarjeta · 5 idiomas · autoservicio",
       "imageAlt": "Panel de RenewPilot con cuentas regresivas de renovación y próximas caducidades"
     },
     "stats": {
-      "assets": "Activos rastreados",
-      "languages": "Idiomas",
+      "types": "Tipos de activo",
       "channels": "Canales de aviso",
-      "uptime": "SLA de disponibilidad"
+      "languages": "Idiomas",
+      "setup": "Hasta el primer aviso"
+    },
+    "how": {
+      "eyebrow": "Cómo funciona",
+      "heading": "Del pánico de la hoja de cálculo a la calma en tres pasos",
+      "subheading": "Sin agentes que instalar. Sin vendor lock-in. Trae tus renovaciones, vete con tu tranquilidad.",
+      "add": {
+        "title": "Añade tus activos",
+        "desc": "Pega un dominio — extraemos registrador y caducidad por WHOIS. Añade un SSL — leemos el validTo. Para todo lo demás, importación CSV."
+      },
+      "policy": {
+        "title": "Configura la política una sola vez",
+        "desc": "Elige canales, plazos (30/14/7/1 por defecto) y destinatarios. Guardado y aplicado a cada nuevo activo."
+      },
+      "ping": {
+        "title": "Nosotros perseguimos las fechas",
+        "desc": "Los avisos salen por email, SMS, WhatsApp, web push e in-app. Lo sabrás semanas antes, no la mañana del mismo día."
+      }
     },
     "pains": {
       "heading": "El coste de una sola fecha perdida",
@@ -942,31 +959,31 @@
       "subheading": "RenewPilot está en inglés, turco, alemán, francés y español — interfaz y notificaciones."
     },
     "trust": {
-      "heading": "Construido pensando en tus datos",
-      "subheading": "Configuraciones por defecto sensatas que no requieren auditoría de seguridad.",
+      "heading": "Diseñado sin sorpresas",
+      "subheading": "Decisiones que un comprador técnico puede validar de una sola lectura.",
       "encryption": {
-        "title": "Cifrado en reposo",
-        "desc": "PostgreSQL con TLS en tránsito. Los tokens se almacenan como hashes SHA-256."
+        "title": "Cero secretos en claro",
+        "desc": "Los tokens de los enlaces se guardan como hash SHA-256 — el original solo lo ves una vez. Contraseñas en bcrypt cost 12."
       },
       "isolation": {
-        "title": "Aislamiento estricto por organización",
-        "desc": "Cada consulta se limita a tu organización. Las búsquedas entre tenants devuelven 404, nunca 403."
+        "title": "Frontera estricta por tenant",
+        "desc": "Cada consulta se limita a tu organización. Las búsquedas entre orgs devuelven 404, nunca 403 — la existencia no se puede sondear."
       },
       "hosting": {
-        "title": "Infraestructura en la UE",
-        "desc": "Funciona sobre Vercel + Neon (Frankfurt). Tratamiento de datos conforme al RGPD por defecto."
+        "title": "Hosting UE por defecto",
+        "desc": "Funciona sobre Vercel + Neon Postgres en Frankfurt. TLS en tránsito, cifrado en reposo, tratamiento conforme al RGPD."
       },
       "audit": {
-        "title": "Listo para auditoría",
-        "desc": "Cada renovación, invitación y cambio de acceso queda registrado y es exportable."
+        "title": "Tus datos exportables",
+        "desc": "Cada renovación, invitación y cambio de acceso queda registrado. Export JSON/CSV de activos e historial cuando quieras."
       }
     },
     "cta": {
-      "heading": "Empieza a rastrear renovaciones en menos de 2 minutos",
-      "subheading": "Crea un workspace, añade tu primer activo, recibe tu primer aviso. Sin tarjeta, sin llamada de configuración.",
-      "emailPlaceholder": "tu@empresa.com",
-      "button": "Crear cuenta",
-      "disclaimer": "Gratis durante la beta. Cancela cuando quieras — tus datos siempre son exportables."
+      "heading": "Quítate el calendario de los hombros.",
+      "subheading": "Crea un workspace, añade tu primer activo, recibe tu primer aviso. Gratis durante la beta — sin tarjeta, sin llamada.",
+      "button": "Crear workspace",
+      "signIn": "Iniciar sesión",
+      "disclaimer": "Cancela cuando quieras · tus datos siguen exportables · self-host bajo petición"
     },
     "footer": {
       "tagline": "El tracker de renovaciones construido por operadores hartos de fechas perdidas.",

@@ -845,17 +845,34 @@
     "hero": {
       "eyebrow": "Während der Beta kostenlos",
       "title": "Verpassen Sie nie wieder eine Verlängerung.",
-      "subtitle": "Verfolgen Sie jede Domain, jedes SSL-Zertifikat, jede Lizenz, jeden Hosting-Plan und jede Kreditkarte an einem Ort — und werden Sie auf jedem Kanal erinnert, bevor sie ablaufen.",
-      "ctaPrimary": "Jetzt starten",
+      "subtitle": "Ein Workspace für jede Domain, jedes SSL-Zertifikat, jede Lizenz und jedes Verlängerungsdatum, von dem Ihr Geschäft abhängt. Auf jedem Kanal benachrichtigt, bevor es ausläuft.",
+      "ctaPrimary": "Kostenlos starten",
       "ctaSecondary": "Funktionen ansehen",
-      "noCard": "Keine Kreditkarte erforderlich",
+      "noCard": "Keine Kreditkarte · 5 Sprachen · selbst einrichten",
       "imageAlt": "RenewPilot-Dashboard mit Verlängerungs-Countdowns und bevorstehenden Abläufen"
     },
     "stats": {
-      "assets": "Verfolgte Assets",
-      "languages": "Sprachen",
+      "types": "Asset-Typen",
       "channels": "Erinnerungskanäle",
-      "uptime": "Verfügbarkeit"
+      "languages": "Sprachen",
+      "setup": "Bis zur ersten Erinnerung"
+    },
+    "how": {
+      "eyebrow": "So funktioniert's",
+      "heading": "Von der Tabellen-Panik zur Ruhe in drei Schritten",
+      "subheading": "Keine Agents zu installieren. Kein Vendor-Lock-in. Bringen Sie Ihre Verlängerungen, gehen Sie mit Ihrer Ruhe.",
+      "add": {
+        "title": "Assets hinzufügen",
+        "desc": "Domain einfügen — wir holen Registrar und Ablauf per WHOIS. SSL-Zertifikat hinzufügen — wir lesen das validTo. Für alles andere CSV-Import."
+      },
+      "policy": {
+        "title": "Richtlinie einmal festlegen",
+        "desc": "Wählen Sie Kanäle, Vorlaufzeiten (standardmäßig 30/14/7/1) und Empfänger. Speichern und für jedes neue Asset wiederverwenden."
+      },
+      "ping": {
+        "title": "Wir kümmern uns ums Erinnern",
+        "desc": "Erinnerungen kommen per E-Mail, SMS, WhatsApp, Web-Push und in-App. Sie wissen Wochen im Voraus Bescheid, nicht erst am Morgen danach."
+      }
     },
     "pains": {
       "heading": "Die Kosten eines verpassten Termins",
@@ -942,31 +959,31 @@
       "subheading": "RenewPilot gibt es auf Englisch, Türkisch, Deutsch, Französisch und Spanisch — UI und Benachrichtigungen."
     },
     "trust": {
-      "heading": "Mit Blick auf Ihre Daten gebaut",
-      "subheading": "Vernünftige Voreinstellungen, die kein Sicherheitsaudit erfordern.",
+      "heading": "Konstruiert ohne Überraschungen",
+      "subheading": "Entscheidungen, die der technische Käufer in einem Durchlauf abnicken kann.",
       "encryption": {
-        "title": "Verschlüsselt",
-        "desc": "PostgreSQL mit TLS-Übertragung. Tokens werden als SHA-256-Hashes gespeichert."
+        "title": "Klartext-Null bei Geheimnissen",
+        "desc": "Share-Link-Tokens als SHA-256-Hashes gespeichert — das Original sehen Sie genau einmal. Passwörter mit bcrypt Cost 12."
       },
       "isolation": {
-        "title": "Strenge Org-Isolation",
-        "desc": "Jede Abfrage ist auf Ihre Organisation beschränkt. Cross-Tenant-Lookups geben 404 zurück, niemals 403."
+        "title": "Harte Tenant-Grenze",
+        "desc": "Jede Abfrage ist auf Ihre Organisation beschränkt. Cross-Org-Lookups geben 404 zurück, niemals 403 — Existenz ist nicht abfragbar."
       },
       "hosting": {
-        "title": "EU-gehostete Infrastruktur",
-        "desc": "Läuft auf Vercel + Neon (Frankfurt). DSGVO-konforme Datenverarbeitung standardmäßig."
+        "title": "Standardmäßig EU-gehostet",
+        "desc": "Läuft auf Vercel + Neon Postgres in Frankfurt. TLS bei Übertragung, Verschlüsselung im Ruhezustand, DSGVO-konforme Verarbeitung."
       },
       "audit": {
-        "title": "Audit-fähig",
-        "desc": "Jede Verlängerung, Einladung und Zugriffsänderung wird protokolliert und ist exportierbar."
+        "title": "Ihre Daten zum Export",
+        "desc": "Jede Verlängerung, Einladung und Zugriffsänderung wird protokolliert. JSON/CSV-Export für Assets und Historie jederzeit."
       }
     },
     "cta": {
-      "heading": "Starten Sie das Verlängerungs-Tracking in unter 2 Minuten",
-      "subheading": "Workspace erstellen, erstes Asset hinzufügen, erste Erinnerung erhalten. Keine Karte, kein Setup-Anruf.",
-      "emailPlaceholder": "sie@firma.com",
-      "button": "Konto erstellen",
-      "disclaimer": "Während der Beta kostenlos. Jederzeit kündbar — Ihre Daten bleiben exportierbar."
+      "heading": "Nehmen Sie sich den Kalender von den Schultern.",
+      "subheading": "Workspace erstellen, erstes Asset hinzufügen, erste Erinnerung erhalten. Während der Beta kostenlos — keine Karte, kein Setup-Anruf.",
+      "button": "Workspace erstellen",
+      "signIn": "Stattdessen anmelden",
+      "disclaimer": "Jederzeit kündbar · Ihre Daten bleiben exportierbar · auf Anfrage selbst hostbar"
     },
     "footer": {
       "tagline": "Der Verlängerungs-Tracker, gebaut von Operatoren, die genug von verpassten Terminen haben.",
