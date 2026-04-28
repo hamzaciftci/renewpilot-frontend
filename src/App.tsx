@@ -28,6 +28,7 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
 const AcceptInvitePage = lazy(() => import("@/pages/AcceptInvitePage"));
 const SharedAssetPage = lazy(() => import("@/pages/SharedAssetPage"));
+const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -75,6 +76,16 @@ function GuestRoute() {
   return <Outlet />;
 }
 
+/** Public landing — authed users skip past it to /dashboard. */
+function LandingGate() {
+  const { isAuthenticated, isLoading, needsOnboarding } = useAuth();
+  if (isLoading) return <LoadingScreen />;
+  if (isAuthenticated) {
+    return <Navigate to={needsOnboarding ? "/onboarding" : "/dashboard"} replace />;
+  }
+  return <LandingPage />;
+}
+
 const App = () => (
   <ErrorBoundary>
     <ThemeProvider>
@@ -86,7 +97,7 @@ const App = () => (
         <AuthProvider>
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<LandingGate />} />
 
               {/* Public routes (accessible whether logged in or not) */}
               <Route path="/invite/:token" element={<AcceptInvitePage />} />

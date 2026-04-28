@@ -836,6 +836,166 @@
     "revoked": "Enlace revocado",
     "revokeFailed": "No se pudo revocar el enlace"
   },
+  "landing": {
+    "betaBadge": "Beta",
+    "nav": {
+      "signIn": "Iniciar sesión",
+      "startFree": "Empezar gratis"
+    },
+    "hero": {
+      "eyebrow": "Gratis durante la beta",
+      "title": "Nunca vuelvas a perder una renovación.",
+      "subtitle": "Sigue cada dominio, certificado SSL, licencia, plan de hosting y tarjeta de crédito en un solo lugar — y recibe avisos por todos los canales antes de que caduquen.",
+      "ctaPrimary": "Empezar",
+      "ctaSecondary": "Ver funciones",
+      "noCard": "Sin tarjeta de crédito",
+      "imageAlt": "Panel de RenewPilot con cuentas regresivas de renovación y próximas caducidades"
+    },
+    "stats": {
+      "assets": "Activos rastreados",
+      "languages": "Idiomas",
+      "channels": "Canales de aviso",
+      "uptime": "SLA de disponibilidad"
+    },
+    "pains": {
+      "heading": "El coste de una sola fecha perdida",
+      "subheading": "Una renovación olvidada puede borrar una relación con un cliente. Esto es lo que evitamos.",
+      "domain": {
+        "title": "Dominio caducado",
+        "desc": "La renovación automática falló en silencio. Cuando lo notas, un especulador ya lo ha registrado.",
+        "solution": "Avisos multicanal a 30 / 14 / 7 / 1 días — más verificación WHOIS."
+      },
+      "ssl": {
+        "title": "Certificado SSL caducado",
+        "desc": "Domingo a las 3 de la mañana, tus clientes ven un aviso de seguridad del navegador y se van.",
+        "solution": "Seguimos el common name, el emisor y la fecha validTo de cada certificado. Páginas y personas reciben aviso."
+      },
+      "license": {
+        "title": "Renovación de licencia perdida",
+        "desc": "Las licencias caducan a mitad de sprint. Los builds se rompen. Compras tarda una semana en sacar una orden.",
+        "solution": "El owner y finanzas reciben el mismo aviso, en su idioma, en su canal."
+      }
+    },
+    "features": {
+      "eyebrow": "Hecho para operadores",
+      "heading": "Todo lo que necesitas para adelantarte a las caducidades",
+      "subheading": "Un único espacio para cada cosa renovable de la que depende tu negocio.",
+      "multiAsset": {
+        "title": "Seguimiento multi-activo",
+        "desc": "Dominios, certificados SSL, licencias de software, hosting, CDN, servidores y tarjetas — todo en una línea de tiempo."
+      },
+      "multiChannel": {
+        "title": "Avisos multicanal",
+        "desc": "Email, SMS, WhatsApp, web push y notificaciones in-app. Define políticas de escalado por activo."
+      },
+      "team": {
+        "title": "Colaboración de equipo",
+        "desc": "Roles owner, admin, member y viewer. Invita por email, limita el acceso por organización."
+      },
+      "whois": {
+        "title": "Detección WHOIS automática",
+        "desc": "Pega un dominio — extraemos registrador, fecha de expiración y bandera de auto-renovación."
+      },
+      "share": {
+        "title": "Enlaces para compartir de solo lectura",
+        "desc": "Envía un resumen de SSL o dominio a un cliente sin darle acceso a la cuenta. Revócalo cuando quieras."
+      },
+      "i18n": {
+        "title": "5 idiomas",
+        "desc": "Inglés, turco, alemán, francés, español — cada etiqueta, cada notificación, cada aviso."
+      }
+    },
+    "featureBlocks": {
+      "assets": {
+        "eyebrow": "Lista de activos",
+        "title": "Mira todo de un vistazo",
+        "body": "Filtra por tipo, estado, días para renovar o propietario. La lista, no tu hoja de cálculo, es la fuente de verdad.",
+        "alt": "Vista de lista de activos con filtros y columna de cuenta regresiva"
+      },
+      "calendar": {
+        "eyebrow": "Calendario",
+        "title": "Visualiza tu calendario de renovaciones",
+        "body": "Detecta clústeres de caducidades semanas antes. Planifica compras en vez de apagar incendios.",
+        "alt": "Vista de calendario de próximas renovaciones"
+      },
+      "detail": {
+        "eyebrow": "Detalle del activo",
+        "title": "Profundiza en cualquier activo",
+        "body": "Una página por activo con historial de renovación, cronología de avisos, propietario, proveedor, coste y barra de acciones rápidas.",
+        "alt": "Página de detalle del activo con barra de acciones rápidas"
+      },
+      "reminders": {
+        "eyebrow": "Políticas de aviso",
+        "title": "Configura las políticas una sola vez",
+        "body": "Elige los canales, los plazos y la audiencia. La misma política se aplica a cada nuevo activo hasta que la cambies.",
+        "alt": "Ajustes de notificaciones con interruptores de canal"
+      },
+      "share": {
+        "eyebrow": "Enlaces para compartir",
+        "title": "Comparte sin dar acceso",
+        "body": "Genera enlaces hasheados con SHA-256 y caducidad opcional a un único activo. Los destinatarios solo ven la info de renovación — no claves de licencia, ni IPs, ni detalles de proyecto.",
+        "alt": "Diálogo de enlace para compartir con banner de token único"
+      }
+    },
+    "i18n": {
+      "heading": "Habla el idioma de tu equipo",
+      "subheading": "RenewPilot está en inglés, turco, alemán, francés y español — interfaz y notificaciones."
+    },
+    "trust": {
+      "heading": "Construido pensando en tus datos",
+      "subheading": "Configuraciones por defecto sensatas que no requieren auditoría de seguridad.",
+      "encryption": {
+        "title": "Cifrado en reposo",
+        "desc": "PostgreSQL con TLS en tránsito. Los tokens se almacenan como hashes SHA-256."
+      },
+      "isolation": {
+        "title": "Aislamiento estricto por organización",
+        "desc": "Cada consulta se limita a tu organización. Las búsquedas entre tenants devuelven 404, nunca 403."
+      },
+      "hosting": {
+        "title": "Infraestructura en la UE",
+        "desc": "Funciona sobre Vercel + Neon (Frankfurt). Tratamiento de datos conforme al RGPD por defecto."
+      },
+      "audit": {
+        "title": "Listo para auditoría",
+        "desc": "Cada renovación, invitación y cambio de acceso queda registrado y es exportable."
+      }
+    },
+    "cta": {
+      "heading": "Empieza a rastrear renovaciones en menos de 2 minutos",
+      "subheading": "Crea un workspace, añade tu primer activo, recibe tu primer aviso. Sin tarjeta, sin llamada de configuración.",
+      "emailPlaceholder": "tu@empresa.com",
+      "button": "Crear cuenta",
+      "disclaimer": "Gratis durante la beta. Cancela cuando quieras — tus datos siempre son exportables."
+    },
+    "footer": {
+      "tagline": "El tracker de renovaciones construido por operadores hartos de fechas perdidas.",
+      "copyright": "Todos los derechos reservados.",
+      "beta": "Gratis durante la beta",
+      "madeIn": "Hecho en la UE",
+      "product": {
+        "title": "Producto",
+        "features": "Funciones",
+        "signIn": "Iniciar sesión",
+        "register": "Crear cuenta"
+      },
+      "company": {
+        "title": "Empresa",
+        "about": "Sobre nosotros",
+        "contact": "Contacto"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Términos del servicio",
+        "privacy": "Política de privacidad"
+      },
+      "resources": {
+        "title": "Recursos",
+        "docs": "Documentación",
+        "status": "Estado del sistema"
+      }
+    }
+  },
   "publicShare": {
     "unavailableTitle": "Enlace no disponible",
     "unavailableDesc": "Este enlace para compartir es inválido, ha caducado o fue revocado. Por favor, solicita uno nuevo al remitente.",

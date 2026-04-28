@@ -836,6 +836,166 @@
     "revoked": "Lien révoqué",
     "revokeFailed": "Impossible de révoquer le lien"
   },
+  "landing": {
+    "betaBadge": "Beta",
+    "nav": {
+      "signIn": "Se connecter",
+      "startFree": "Démarrer gratuitement"
+    },
+    "hero": {
+      "eyebrow": "Gratuit pendant la beta",
+      "title": "Ne ratez plus jamais un renouvellement.",
+      "subtitle": "Suivez chaque domaine, certificat SSL, licence, plan d'hébergement et carte bancaire au même endroit — et soyez prévenu sur tous les canaux avant l'expiration.",
+      "ctaPrimary": "Commencer",
+      "ctaSecondary": "Voir les fonctionnalités",
+      "noCard": "Aucune carte requise",
+      "imageAlt": "Tableau de bord RenewPilot avec compte à rebours de renouvellement et expirations à venir"
+    },
+    "stats": {
+      "assets": "Actifs suivis",
+      "languages": "Langues",
+      "channels": "Canaux de rappel",
+      "uptime": "SLA de disponibilité"
+    },
+    "pains": {
+      "heading": "Le coût d'une seule date manquée",
+      "subheading": "Un renouvellement oublié peut effacer une relation client. Voici ce que nous empêchons.",
+      "domain": {
+        "title": "Domaine expiré",
+        "desc": "Le renouvellement automatique a échoué silencieusement. Avant que vous ne le remarquiez, un squatteur l'a enregistré.",
+        "solution": "Rappels multicanaux à 30 / 14 / 7 / 1 jours — plus vérification WHOIS."
+      },
+      "ssl": {
+        "title": "Certificat SSL expiré",
+        "desc": "Dimanche à 3 h du matin, vos clients voient un avertissement de sécurité et quittent le site.",
+        "solution": "Nous suivons le common name, l'émetteur et la date validTo de chaque certificat. Pages et personnes sont alertées."
+      },
+      "license": {
+        "title": "Renouvellement de licence raté",
+        "desc": "Les licences expirent en plein sprint. Les builds cassent. Les achats prennent une semaine pour valider une commande.",
+        "solution": "Owner et finance reçoivent la même alerte, dans leur langue, sur leur canal."
+      }
+    },
+    "features": {
+      "eyebrow": "Conçu pour les opérateurs",
+      "heading": "Tout ce qu'il faut pour anticiper les expirations",
+      "subheading": "Un seul espace pour tout ce que votre activité doit renouveler.",
+      "multiAsset": {
+        "title": "Suivi multi-actifs",
+        "desc": "Domaines, certificats SSL, licences logicielles, hébergement, CDN, serveurs et cartes bancaires — tout sur la même chronologie."
+      },
+      "multiChannel": {
+        "title": "Rappels multicanaux",
+        "desc": "Email, SMS, WhatsApp, web push et notifications in-app. Définissez des politiques d'escalade par actif."
+      },
+      "team": {
+        "title": "Collaboration d'équipe",
+        "desc": "Rôles owner, admin, member et viewer. Invitez par email, accès limité par organisation."
+      },
+      "whois": {
+        "title": "Détection WHOIS automatique",
+        "desc": "Collez un domaine — nous récupérons le registraire, la date d'expiration et l'auto-renouvellement."
+      },
+      "share": {
+        "title": "Liens de partage en lecture seule",
+        "desc": "Envoyez un récapitulatif SSL ou domaine à un client sans donner accès au compte. Révocable à tout moment."
+      },
+      "i18n": {
+        "title": "5 langues",
+        "desc": "Anglais, turc, allemand, français, espagnol — chaque libellé, chaque notification, chaque rappel."
+      }
+    },
+    "featureBlocks": {
+      "assets": {
+        "eyebrow": "Liste des actifs",
+        "title": "Tout voir d'un coup d'œil",
+        "body": "Filtrez par type, statut, jours avant renouvellement ou propriétaire. La liste, pas votre tableur, est la source de vérité.",
+        "alt": "Vue liste des actifs avec filtres et colonne de compte à rebours"
+      },
+      "calendar": {
+        "eyebrow": "Calendrier",
+        "title": "Visualisez votre calendrier de renouvellements",
+        "body": "Repérez les pics d'expiration plusieurs semaines à l'avance. Planifiez les achats au lieu d'éteindre des incendies.",
+        "alt": "Vue calendrier des renouvellements à venir"
+      },
+      "detail": {
+        "eyebrow": "Détail d'un actif",
+        "title": "Plongez dans chaque actif",
+        "body": "Une page par actif avec historique de renouvellement, chronologie des rappels, propriétaire, fournisseur, coût et barre latérale d'actions rapides.",
+        "alt": "Page détaillée d'un actif avec barre latérale d'actions rapides"
+      },
+      "reminders": {
+        "eyebrow": "Politiques de rappel",
+        "title": "Définissez les politiques une seule fois",
+        "body": "Choisissez les canaux, les délais et l'audience. La même politique s'applique à chaque nouvel actif jusqu'à modification.",
+        "alt": "Paramètres de notifications avec interrupteurs de canal"
+      },
+      "share": {
+        "eyebrow": "Liens de partage",
+        "title": "Partager sans donner d'accès",
+        "body": "Générez des liens hashés en SHA-256, avec expiration optionnelle, vers un seul actif. Les destinataires ne voient que les infos de renouvellement — pas de clés de licence, pas d'IPs, pas de détails projet.",
+        "alt": "Boîte de dialogue de lien de partage avec bannière de jeton unique"
+      }
+    },
+    "i18n": {
+      "heading": "Parlez la langue de votre équipe",
+      "subheading": "RenewPilot existe en anglais, turc, allemand, français et espagnol — interface et notifications."
+    },
+    "trust": {
+      "heading": "Conçu en pensant à vos données",
+      "subheading": "Des valeurs par défaut sensées qui ne nécessitent pas de revue de sécurité.",
+      "encryption": {
+        "title": "Chiffré au repos",
+        "desc": "PostgreSQL avec TLS en transit. Les jetons sont stockés sous forme de hachages SHA-256."
+      },
+      "isolation": {
+        "title": "Isolation stricte par organisation",
+        "desc": "Chaque requête est limitée à votre organisation. Les recherches inter-tenants renvoient 404, jamais 403."
+      },
+      "hosting": {
+        "title": "Infrastructure hébergée en UE",
+        "desc": "Tourne sur Vercel + Neon (Francfort). Traitement des données conforme au RGPD par défaut."
+      },
+      "audit": {
+        "title": "Prêt pour l'audit",
+        "desc": "Chaque renouvellement, invitation et changement d'accès est journalisé et exportable."
+      }
+    },
+    "cta": {
+      "heading": "Commencez à suivre vos renouvellements en moins de 2 minutes",
+      "subheading": "Créez un workspace, ajoutez votre premier actif, recevez votre premier rappel. Pas de carte, pas d'appel de configuration.",
+      "emailPlaceholder": "vous@entreprise.com",
+      "button": "Créer un compte",
+      "disclaimer": "Gratuit pendant la beta. Annulez à tout moment — vos données restent exportables."
+    },
+    "footer": {
+      "tagline": "Le tracker de renouvellement bâti par des opérateurs lassés des dates manquées.",
+      "copyright": "Tous droits réservés.",
+      "beta": "Gratuit pendant la beta",
+      "madeIn": "Fait dans l'UE",
+      "product": {
+        "title": "Produit",
+        "features": "Fonctionnalités",
+        "signIn": "Se connecter",
+        "register": "Créer un compte"
+      },
+      "company": {
+        "title": "Société",
+        "about": "À propos",
+        "contact": "Contact"
+      },
+      "legal": {
+        "title": "Légal",
+        "terms": "Conditions d'utilisation",
+        "privacy": "Politique de confidentialité"
+      },
+      "resources": {
+        "title": "Ressources",
+        "docs": "Documentation",
+        "status": "État du système"
+      }
+    }
+  },
   "publicShare": {
     "unavailableTitle": "Lien indisponible",
     "unavailableDesc": "Ce lien de partage est invalide, a expiré ou a été révoqué. Veuillez demander un nouveau lien à l'expéditeur.",

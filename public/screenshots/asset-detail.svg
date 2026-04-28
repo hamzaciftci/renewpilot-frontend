@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Asset detail mockup">
+  <rect width="1440" height="900" fill="#0a0a0b"/>
+  <rect x="0" y="0" width="220" height="900" fill="#111114"/>
+  <g fill="#3b82f6"><rect x="20" y="22" width="14" height="14" rx="3"/></g>
+  <text x="42" y="36" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">RenewPilot</text>
+  <g font-family="Inter, system-ui, sans-serif" font-size="12" fill="#9ca3af">
+    <text x="44" y="100">Dashboard</text>
+    <rect x="14" y="118" width="192" height="32" rx="6" fill="#1f2937"/>
+    <text x="44" y="138" fill="#e5e7eb" font-weight="500">Assets</text>
+    <text x="44" y="170">Calendar</text>
+    <text x="44" y="202">Renewals</text>
+  </g>
+
+  <rect x="220" y="0" width="1220" height="56" fill="#0e0e10"/>
+  <line x1="220" y1="56" x2="1440" y2="56" stroke="#1f2937"/>
+
+  <!-- Breadcrumb -->
+  <text x="252" y="98" fill="#6b7280" font-family="Inter, system-ui, sans-serif" font-size="12">Assets ›</text>
+  <text x="320" y="98" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500">acme.com</text>
+
+  <!-- Header -->
+  <text x="252" y="140" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">acme.com</text>
+  <text x="412" y="140" fill="#3b82f6" font-family="ui-monospace, monospace" font-size="10" font-weight="600">DOMAIN</text>
+  <circle cx="475" cy="135" r="3" fill="#ef4444"/>
+  <text x="485" y="140" fill="#ef4444" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500">Critical</text>
+
+  <g font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="500">
+    <rect x="1080" y="118" width="100" height="36" rx="8" fill="#10b981" opacity="0.1" stroke="#10b981" stroke-opacity="0.3"/>
+    <text x="1130" y="142" fill="#10b981" text-anchor="middle">✓ Renew</text>
+    <rect x="1186" y="118" width="80" height="36" rx="8" fill="#0e0e10" stroke="#1f2937"/>
+    <text x="1226" y="142" fill="#e5e7eb" text-anchor="middle">✎ Edit</text>
+    <rect x="1272" y="118" width="40" height="36" rx="8" fill="#0e0e10" stroke="#1f2937"/>
+    <text x="1292" y="142" fill="#ef4444" text-anchor="middle">🗑</text>
+  </g>
+
+  <!-- Main panel -->
+  <rect x="252" y="180" width="700" height="160" rx="12" fill="#111114" stroke="#1f2937"/>
+  <line x1="602" y1="180" x2="602" y2="340" stroke="#1f2937"/>
+  <text x="272" y="208" fill="#6b7280" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="500">DAYS REMAINING</text>
+  <text x="272" y="280" fill="#ef4444" font-family="Inter, system-ui, sans-serif" font-size="56" font-weight="700">03</text>
+  <text x="272" y="316" fill="#9ca3af" font-family="Inter, system-ui, sans-serif" font-size="12">Due 2026-04-30</text>
+
+  <text x="622" y="208" fill="#6b7280" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="500">PRICE</text>
+  <text x="622" y="280" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="44" font-weight="700">USD 18.00</text>
+  <text x="622" y="316" fill="#9ca3af" font-family="Inter, system-ui, sans-serif" font-size="12">per 1 year</text>
+
+  <!-- Detail grid -->
+  <rect x="252" y="356" width="700" height="220" rx="12" fill="#111114" stroke="#1f2937"/>
+  <g font-family="Inter, system-ui, sans-serif">
+    <text x="272" y="386" fill="#6b7280" font-size="10" font-weight="500">VENDOR</text>
+    <text x="272" y="406" fill="#e5e7eb" font-size="13">GoDaddy</text>
+    <text x="490" y="386" fill="#6b7280" font-size="10" font-weight="500">PROJECT</text>
+    <text x="490" y="406" fill="#e5e7eb" font-size="13">RenewPilot Production</text>
+    <text x="272" y="446" fill="#6b7280" font-size="10" font-weight="500">ASSIGNED TO</text>
+    <text x="272" y="466" fill="#e5e7eb" font-size="13">Hamza Ç.</text>
+    <text x="490" y="446" fill="#6b7280" font-size="10" font-weight="500">AUTO-RENEW</text>
+    <circle cx="498" cy="463" r="3" fill="#10b981"/>
+    <text x="510" y="466" fill="#10b981" font-size="11" font-weight="500">Enabled</text>
+    <text x="272" y="506" fill="#6b7280" font-size="10" font-weight="500">NOTES</text>
+    <text x="272" y="526" fill="#d1d5db" font-size="12">Primary corporate domain. Move DNS to Cloudflare next renewal.</text>
+    <text x="272" y="556" fill="#6b7280" font-size="10" font-weight="500">CREATED</text>
+    <text x="272" y="572" fill="#e5e7eb" font-family="ui-monospace, monospace" font-size="11">2024-04-30</text>
+  </g>
+
+  <!-- Timeline -->
+  <rect x="252" y="592" width="700" height="280" rx="12" fill="#111114" stroke="#1f2937"/>
+  <text x="272" y="622" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">Renewal history</text>
+  <g font-family="Inter, system-ui, sans-serif">
+    <line x1="280" y1="650" x2="280" y2="850" stroke="#1f2937" stroke-width="1"/>
+    <circle cx="280" cy="660" r="4" fill="#3b82f6"/>
+    <text x="296" y="664" fill="#e5e7eb" font-size="11">REMINDER SENT — 7 days notice</text>
+    <text x="296" y="678" fill="#6b7280" font-size="10" font-family="ui-monospace, monospace">2026-04-23</text>
+    <circle cx="280" cy="710" r="4" fill="#f59e0b"/>
+    <text x="296" y="714" fill="#e5e7eb" font-size="11">REMINDER SENT — 14 days notice</text>
+    <text x="296" y="728" fill="#6b7280" font-size="10" font-family="ui-monospace, monospace">2026-04-16</text>
+    <circle cx="280" cy="760" r="4" fill="#10b981"/>
+    <text x="296" y="764" fill="#e5e7eb" font-size="11">RENEWED — 1 year extension</text>
+    <text x="296" y="778" fill="#6b7280" font-size="10" font-family="ui-monospace, monospace">2025-04-30</text>
+    <circle cx="280" cy="810" r="4" fill="#3b82f6"/>
+    <text x="296" y="814" fill="#e5e7eb" font-size="11">CREATED — initial registration</text>
+    <text x="296" y="828" fill="#6b7280" font-size="10" font-family="ui-monospace, monospace">2024-04-30</text>
+  </g>
+
+  <!-- Right sidebar -->
+  <rect x="980" y="180" width="380" height="120" rx="12" fill="#111114" stroke="#1f2937"/>
+  <text x="1000" y="210" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">Reminder Policy</text>
+  <text x="1000" y="234" fill="#9ca3af" font-family="Inter, system-ui, sans-serif" font-size="11">Default — Notifications at 30, 14, 7 and 1 days</text>
+  <text x="1000" y="248" fill="#9ca3af" font-family="Inter, system-ui, sans-serif" font-size="11">before expiration.</text>
+
+  <rect x="980" y="316" width="380" height="240" rx="12" fill="#111114" stroke="#1f2937"/>
+  <text x="1000" y="346" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">Quick Actions</text>
+  <g font-family="Inter, system-ui, sans-serif" font-size="12">
+    <rect x="996" y="364" width="348" height="32" rx="6" fill="#1f2937"/>
+    <text x="1010" y="385" fill="#10b981">✓ Mark Renewed</text>
+    <rect x="996" y="404" width="348" height="32" rx="6" fill="#0e0e10"/>
+    <text x="1010" y="425" fill="#9ca3af">✎ Edit Asset</text>
+    <rect x="996" y="444" width="348" height="32" rx="6" fill="#0e0e10"/>
+    <text x="1010" y="465" fill="#3b82f6">🔗 Share Link</text>
+    <rect x="996" y="484" width="348" height="32" rx="6" fill="#0e0e10"/>
+    <text x="1010" y="505" fill="#ef4444">🗑 Delete Asset</text>
+  </g>
+
+  <rect x="980" y="572" width="380" height="160" rx="12" fill="#111114" stroke="#1f2937"/>
+  <text x="1000" y="602" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">Notifications</text>
+  <g font-family="Inter, system-ui, sans-serif" font-size="11">
+    <text x="1000" y="626" fill="#10b981">● Email — sent</text>
+    <text x="1000" y="648" fill="#10b981">● Web push — sent</text>
+    <text x="1000" y="670" fill="#9ca3af">● SMS — disabled</text>
+    <text x="1000" y="692" fill="#9ca3af">● WhatsApp — disabled</text>
+    <text x="1000" y="714" fill="#10b981">● In-app — sent</text>
+  </g>
+</svg>

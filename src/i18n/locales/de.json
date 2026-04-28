@@ -836,6 +836,166 @@
     "revoked": "Link widerrufen",
     "revokeFailed": "Link konnte nicht widerrufen werden"
   },
+  "landing": {
+    "betaBadge": "Beta",
+    "nav": {
+      "signIn": "Anmelden",
+      "startFree": "Kostenlos starten"
+    },
+    "hero": {
+      "eyebrow": "Während der Beta kostenlos",
+      "title": "Verpassen Sie nie wieder eine Verlängerung.",
+      "subtitle": "Verfolgen Sie jede Domain, jedes SSL-Zertifikat, jede Lizenz, jeden Hosting-Plan und jede Kreditkarte an einem Ort — und werden Sie auf jedem Kanal erinnert, bevor sie ablaufen.",
+      "ctaPrimary": "Jetzt starten",
+      "ctaSecondary": "Funktionen ansehen",
+      "noCard": "Keine Kreditkarte erforderlich",
+      "imageAlt": "RenewPilot-Dashboard mit Verlängerungs-Countdowns und bevorstehenden Abläufen"
+    },
+    "stats": {
+      "assets": "Verfolgte Assets",
+      "languages": "Sprachen",
+      "channels": "Erinnerungskanäle",
+      "uptime": "Verfügbarkeit"
+    },
+    "pains": {
+      "heading": "Die Kosten eines verpassten Termins",
+      "subheading": "Eine einzige vergessene Verlängerung kann eine Kundenbeziehung beenden. Genau das verhindern wir.",
+      "domain": {
+        "title": "Domain abgelaufen",
+        "desc": "Die automatische Verlängerung schlug stillschweigend fehl. Bis Sie es bemerken, hat ein Domain-Grabber sie registriert.",
+        "solution": "Mehrkanalige Erinnerungen 30 / 14 / 7 / 1 Tage vorher — plus WHOIS-Verifizierung."
+      },
+      "ssl": {
+        "title": "SSL-Zertifikat abgelaufen",
+        "desc": "Sonntag um 3 Uhr nachts sehen Ihre Kunden eine Browser-Sicherheitswarnung und springen ab.",
+        "solution": "Wir verfolgen Common Name, Aussteller und validTo jedes Zertifikats. Seiten und Personen werden benachrichtigt."
+      },
+      "license": {
+        "title": "Lizenzverlängerung verpasst",
+        "desc": "Lizenzen laufen mitten im Sprint ab. Builds brechen. Procurement braucht eine Woche für eine Bestellung.",
+        "solution": "Owner und Finance bekommen den gleichen Hinweis, in ihrer Sprache, auf ihrem Kanal."
+      }
+    },
+    "features": {
+      "eyebrow": "Für Operatoren gebaut",
+      "heading": "Alles, was Sie brauchen, um Verlängerungen voraus zu sein",
+      "subheading": "Ein Workspace für jedes verlängerbare Ding, von dem Ihr Geschäft abhängt.",
+      "multiAsset": {
+        "title": "Multi-Asset-Tracking",
+        "desc": "Domains, SSL-Zertifikate, Software-Lizenzen, Hosting, CDN, Server und Kreditkarten — alles in einer Zeitleiste."
+      },
+      "multiChannel": {
+        "title": "Mehrkanalige Erinnerungen",
+        "desc": "E-Mail, SMS, WhatsApp, Web Push und In-App-Benachrichtigungen. Eskalationsrichtlinien pro Asset."
+      },
+      "team": {
+        "title": "Team-Zusammenarbeit",
+        "desc": "Owner-, Admin-, Member- und Viewer-Rollen. Per E-Mail einladen, Zugriff pro Organisation begrenzen."
+      },
+      "whois": {
+        "title": "WHOIS-Auto-Erkennung",
+        "desc": "Domain einfügen — wir holen Registrar, Ablaufdatum und Auto-Renew-Flag automatisch."
+      },
+      "share": {
+        "title": "Schreibgeschützte Freigabe-Links",
+        "desc": "Senden Sie eine SSL- oder Domain-Zusammenfassung an einen Kunden ohne Account-Zugriff. Jederzeit widerrufbar."
+      },
+      "i18n": {
+        "title": "5 Sprachen",
+        "desc": "Englisch, Türkisch, Deutsch, Französisch, Spanisch — jedes Label, jede Benachrichtigung, jede Erinnerung."
+      }
+    },
+    "featureBlocks": {
+      "assets": {
+        "eyebrow": "Asset-Liste",
+        "title": "Sehen Sie alles auf einen Blick",
+        "body": "Filtern Sie nach Typ, Status, Tagen bis zur Verlängerung oder Owner. Die Liste ist die Wahrheit, nicht Ihre Tabelle.",
+        "alt": "Asset-Listenansicht mit Filtern und Verlängerungs-Countdown-Spalte"
+      },
+      "calendar": {
+        "eyebrow": "Kalender",
+        "title": "Visualisieren Sie Ihren Verlängerungskalender",
+        "body": "Erkennen Sie Cluster von Abläufen Wochen im Voraus. Planen Sie Procurement statt Brände zu löschen.",
+        "alt": "Kalenderansicht bevorstehender Verlängerungen"
+      },
+      "detail": {
+        "eyebrow": "Asset-Detail",
+        "title": "Tauchen Sie in jedes Asset ein",
+        "body": "Eine Seite pro Asset mit Verlängerungshistorie, Erinnerungs-Timeline, Owner, Anbieter, Kosten und Quick-Action-Sidebar.",
+        "alt": "Asset-Detailseite mit Quick-Actions-Sidebar"
+      },
+      "reminders": {
+        "eyebrow": "Erinnerungsrichtlinien",
+        "title": "Richtlinien einmal festlegen",
+        "body": "Wählen Sie die Kanäle, die Vorlaufzeiten und die Zielgruppe. Dieselbe Richtlinie gilt für jedes neue Asset, bis Sie sie ändern.",
+        "alt": "Benachrichtigungseinstellungen mit Kanal-Schaltern"
+      },
+      "share": {
+        "eyebrow": "Freigabe-Links",
+        "title": "Teilen ohne Zugriff zu gewähren",
+        "body": "Erstellen Sie SHA-256-gehashte, optional ablaufende Links zu einem einzelnen Asset. Empfänger sehen nur Verlängerungsinfos — keine Lizenzschlüssel, keine IPs, keine Projektdetails.",
+        "alt": "Freigabe-Link-Dialog mit Einmal-Token-Banner"
+      }
+    },
+    "i18n": {
+      "heading": "Sprechen Sie die Sprache Ihres Teams",
+      "subheading": "RenewPilot gibt es auf Englisch, Türkisch, Deutsch, Französisch und Spanisch — UI und Benachrichtigungen."
+    },
+    "trust": {
+      "heading": "Mit Blick auf Ihre Daten gebaut",
+      "subheading": "Vernünftige Voreinstellungen, die kein Sicherheitsaudit erfordern.",
+      "encryption": {
+        "title": "Verschlüsselt",
+        "desc": "PostgreSQL mit TLS-Übertragung. Tokens werden als SHA-256-Hashes gespeichert."
+      },
+      "isolation": {
+        "title": "Strenge Org-Isolation",
+        "desc": "Jede Abfrage ist auf Ihre Organisation beschränkt. Cross-Tenant-Lookups geben 404 zurück, niemals 403."
+      },
+      "hosting": {
+        "title": "EU-gehostete Infrastruktur",
+        "desc": "Läuft auf Vercel + Neon (Frankfurt). DSGVO-konforme Datenverarbeitung standardmäßig."
+      },
+      "audit": {
+        "title": "Audit-fähig",
+        "desc": "Jede Verlängerung, Einladung und Zugriffsänderung wird protokolliert und ist exportierbar."
+      }
+    },
+    "cta": {
+      "heading": "Starten Sie das Verlängerungs-Tracking in unter 2 Minuten",
+      "subheading": "Workspace erstellen, erstes Asset hinzufügen, erste Erinnerung erhalten. Keine Karte, kein Setup-Anruf.",
+      "emailPlaceholder": "sie@firma.com",
+      "button": "Konto erstellen",
+      "disclaimer": "Während der Beta kostenlos. Jederzeit kündbar — Ihre Daten bleiben exportierbar."
+    },
+    "footer": {
+      "tagline": "Der Verlängerungs-Tracker, gebaut von Operatoren, die genug von verpassten Terminen haben.",
+      "copyright": "Alle Rechte vorbehalten.",
+      "beta": "Während der Beta kostenlos",
+      "madeIn": "Made in EU",
+      "product": {
+        "title": "Produkt",
+        "features": "Funktionen",
+        "signIn": "Anmelden",
+        "register": "Konto erstellen"
+      },
+      "company": {
+        "title": "Unternehmen",
+        "about": "Über uns",
+        "contact": "Kontakt"
+      },
+      "legal": {
+        "title": "Rechtliches",
+        "terms": "Nutzungsbedingungen",
+        "privacy": "Datenschutz"
+      },
+      "resources": {
+        "title": "Ressourcen",
+        "docs": "Dokumentation",
+        "status": "Systemstatus"
+      }
+    }
+  },
   "publicShare": {
     "unavailableTitle": "Link nicht verfügbar",
     "unavailableDesc": "Dieser Freigabe-Link ist ungültig, abgelaufen oder wurde widerrufen. Bitten Sie den Absender um einen neuen Link.",

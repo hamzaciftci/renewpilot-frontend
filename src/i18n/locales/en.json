@@ -836,6 +836,166 @@
     "revoked": "Link revoked",
     "revokeFailed": "Could not revoke the link"
   },
+  "landing": {
+    "betaBadge": "Beta",
+    "nav": {
+      "signIn": "Sign in",
+      "startFree": "Start free"
+    },
+    "hero": {
+      "eyebrow": "Free during beta",
+      "title": "Never miss another renewal.",
+      "subtitle": "Track every domain, SSL certificate, license, hosting plan and credit card in one place — and get reminded across every channel before they expire.",
+      "ctaPrimary": "Get started",
+      "ctaSecondary": "See features",
+      "noCard": "No credit card required",
+      "imageAlt": "RenewPilot dashboard showing renewal countdowns and upcoming expirations"
+    },
+    "stats": {
+      "assets": "Assets tracked",
+      "languages": "Languages",
+      "channels": "Reminder channels",
+      "uptime": "Uptime SLA"
+    },
+    "pains": {
+      "heading": "The cost of one missed date",
+      "subheading": "A single forgotten renewal can erase a customer relationship. Here's what we stop from happening.",
+      "domain": {
+        "title": "Domain expired",
+        "desc": "The domain auto-renew failed silently. By the time you notice, a squatter has registered it.",
+        "solution": "Multi-channel reminders 30 / 14 / 7 / 1 days out — plus WHOIS verification."
+      },
+      "ssl": {
+        "title": "SSL certificate lapsed",
+        "desc": "At 3 a.m. on a Sunday your customers see a browser security warning and bounce.",
+        "solution": "Track common name, issuer and validTo for every cert. Pages and people get pinged."
+      },
+      "license": {
+        "title": "License renewal missed",
+        "desc": "Seats expire mid-sprint. Builds break. Procurement takes a week to push a PO through.",
+        "solution": "Owners and finance get the same heads-up, in their language, on the channel they use."
+      }
+    },
+    "features": {
+      "eyebrow": "Built for operators",
+      "heading": "Everything you need to stay ahead of expirations",
+      "subheading": "One workspace for every renewable thing your business depends on.",
+      "multiAsset": {
+        "title": "Multi-asset tracking",
+        "desc": "Domains, SSL certs, software licenses, hosting, CDN, servers and credit cards — all in one timeline."
+      },
+      "multiChannel": {
+        "title": "Multi-channel reminders",
+        "desc": "Email, SMS, WhatsApp, web push and in-app notifications. Set escalation policies per asset."
+      },
+      "team": {
+        "title": "Team collaboration",
+        "desc": "Owner, admin, member and viewer roles. Invite by email, scope access per organization."
+      },
+      "whois": {
+        "title": "WHOIS auto-detect",
+        "desc": "Paste a domain — we pull the registrar, expiration date and auto-renew flag automatically."
+      },
+      "share": {
+        "title": "Read-only share links",
+        "desc": "Send an SSL or domain summary to a client without granting account access. Revoke anytime."
+      },
+      "i18n": {
+        "title": "5 languages",
+        "desc": "English, Turkish, German, French, Spanish — every label, every notification, every reminder."
+      }
+    },
+    "featureBlocks": {
+      "assets": {
+        "eyebrow": "Asset list",
+        "title": "See everything at a glance",
+        "body": "Filter by type, status, days-until-renewal or owner. The list, not your spreadsheet, is the source of truth.",
+        "alt": "Asset list view with filters and renewal countdown column"
+      },
+      "calendar": {
+        "eyebrow": "Calendar",
+        "title": "Visualize your renewal calendar",
+        "body": "Spot clusters of expirations weeks before they hit. Drag a month forward to plan procurement instead of putting out fires.",
+        "alt": "Calendar view of upcoming renewals"
+      },
+      "detail": {
+        "eyebrow": "Asset detail",
+        "title": "Drill into any asset",
+        "body": "One page per asset with renewal history, reminder timeline, owner, vendor, cost, and a quick-action sidebar to renew, edit or share.",
+        "alt": "Asset detail page with quick actions sidebar"
+      },
+      "reminders": {
+        "eyebrow": "Reminder policies",
+        "title": "Set reminder policies once",
+        "body": "Pick the channels, the lead times and the audience. The same policy applies to every new asset until you change it.",
+        "alt": "Notification settings showing channel toggles"
+      },
+      "share": {
+        "eyebrow": "Share links",
+        "title": "Share without giving access",
+        "body": "Generate SHA-256 hashed, optionally-expiring links to a single asset. Recipients see only the renewal info — no license keys, no IPs, no project details.",
+        "alt": "Share link dialog with one-time token banner"
+      }
+    },
+    "i18n": {
+      "heading": "Speak your team's language",
+      "subheading": "RenewPilot ships in English, Turkish, German, French and Spanish — UI and notifications both."
+    },
+    "trust": {
+      "heading": "Built with your data in mind",
+      "subheading": "Sensible defaults that don't require a security review.",
+      "encryption": {
+        "title": "Encrypted at rest",
+        "desc": "PostgreSQL with TLS in transit. Tokens stored as SHA-256 hashes."
+      },
+      "isolation": {
+        "title": "Strict org isolation",
+        "desc": "Every query is scoped to your organization. Cross-tenant lookups return 404, never 403."
+      },
+      "hosting": {
+        "title": "EU-hosted infrastructure",
+        "desc": "Runs on Vercel + Neon (Frankfurt). GDPR-aware data handling by default."
+      },
+      "audit": {
+        "title": "Audit-ready",
+        "desc": "Every renewal, invite and access change is logged and exportable."
+      }
+    },
+    "cta": {
+      "heading": "Start tracking renewals in under 2 minutes",
+      "subheading": "Create a workspace, add your first asset, get your first reminder. No card, no setup call.",
+      "emailPlaceholder": "you@company.com",
+      "button": "Create account",
+      "disclaimer": "Free during beta. Cancel anytime — your data stays exportable."
+    },
+    "footer": {
+      "tagline": "The renewal tracker built by operators tired of missed dates.",
+      "copyright": "All rights reserved.",
+      "beta": "Free during beta",
+      "madeIn": "Made in EU",
+      "product": {
+        "title": "Product",
+        "features": "Features",
+        "signIn": "Sign in",
+        "register": "Create account"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About",
+        "contact": "Contact"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms of service",
+        "privacy": "Privacy policy"
+      },
+      "resources": {
+        "title": "Resources",
+        "docs": "Documentation",
+        "status": "System status"
+      }
+    }
+  },
   "publicShare": {
     "unavailableTitle": "Link unavailable",
     "unavailableDesc": "This share link is invalid, has expired, or was revoked. Please ask the sender for a fresh one.",

@@ -836,6 +836,166 @@
     "revoked": "Bağlantı iptal edildi",
     "revokeFailed": "Bağlantı iptal edilemedi"
   },
+  "landing": {
+    "betaBadge": "Beta",
+    "nav": {
+      "signIn": "Giriş yap",
+      "startFree": "Ücretsiz başla"
+    },
+    "hero": {
+      "eyebrow": "Beta süresince ücretsiz",
+      "title": "Hiçbir yenilemeyi kaçırma.",
+      "subtitle": "Domain, SSL sertifikası, lisans, hosting planı ve kredi kartlarını tek yerden takip et — son kullanma tarihi yaklaşmadan her kanaldan haber al.",
+      "ctaPrimary": "Hemen başla",
+      "ctaSecondary": "Özellikleri gör",
+      "noCard": "Kredi kartı gerekmez",
+      "imageAlt": "RenewPilot panosu yenileme geri sayımları ve yaklaşan son kullanma tarihleri ile"
+    },
+    "stats": {
+      "assets": "Takip edilen varlık",
+      "languages": "Dil",
+      "channels": "Hatırlatma kanalı",
+      "uptime": "Çalışma süresi"
+    },
+    "pains": {
+      "heading": "Tek bir kaçırılan tarihin maliyeti",
+      "subheading": "Unutulan bir yenileme bir müşteri ilişkisini bitirebilir. İşte engellediğimiz şeyler.",
+      "domain": {
+        "title": "Domain süresi doldu",
+        "desc": "Otomatik yenileme sessizce başarısız oldu. Fark ettiğinde bir domain spekülatörü zaten almıştı.",
+        "solution": "30 / 14 / 7 / 1 gün öncesinden çok kanallı hatırlatmalar — artı WHOIS doğrulaması."
+      },
+      "ssl": {
+        "title": "SSL sertifikası geçersiz",
+        "desc": "Pazar gecesi 03.00'te müşterilerin tarayıcı güvenlik uyarısı görüyor ve siteden ayrılıyor.",
+        "solution": "Her sertifikanın common name, issuer ve validTo bilgisini takip ederiz. Hem sayfalar hem insanlar uyarılır."
+      },
+      "license": {
+        "title": "Lisans yenilemesi kaçtı",
+        "desc": "Sprint ortasında lisanslar bitiyor. Build'ler kırılıyor. Satınalma haftalarca PO çıkarıyor.",
+        "solution": "Asset sahibi ve finans aynı uyarıyı kendi dillerinde, kendi kanallarında alır."
+      }
+    },
+    "features": {
+      "eyebrow": "Operatörler için",
+      "heading": "Yenilemenin önünde kalmak için ihtiyacın olan her şey",
+      "subheading": "İşinin bağlı olduğu her yenilenebilir şey için tek workspace.",
+      "multiAsset": {
+        "title": "Çok tipli varlık takibi",
+        "desc": "Domain, SSL, yazılım lisansı, hosting, CDN, sunucu ve kredi kartları — hepsi aynı zaman çizelgesinde."
+      },
+      "multiChannel": {
+        "title": "Çok kanallı hatırlatmalar",
+        "desc": "Email, SMS, WhatsApp, web push ve uygulama içi bildirimler. Varlık başına eskalasyon politikası ayarla."
+      },
+      "team": {
+        "title": "Ekip işbirliği",
+        "desc": "Owner, admin, member ve viewer rolleri. Email ile davet et, organizasyon başına erişim tanımla."
+      },
+      "whois": {
+        "title": "WHOIS otomatik tespit",
+        "desc": "Domain yapıştır — registrar, son kullanma tarihi ve otomatik yenileme bayrağını biz çekiyoruz."
+      },
+      "share": {
+        "title": "Salt okunur paylaşım linkleri",
+        "desc": "Müşterine SSL veya domain özetini hesap erişimi vermeden gönder. İstediğin zaman iptal et."
+      },
+      "i18n": {
+        "title": "5 dil",
+        "desc": "İngilizce, Türkçe, Almanca, Fransızca, İspanyolca — her etiket, her bildirim, her hatırlatma."
+      }
+    },
+    "featureBlocks": {
+      "assets": {
+        "eyebrow": "Varlık listesi",
+        "title": "Her şeyi tek bakışta gör",
+        "body": "Tip, durum, kalan gün veya sahibine göre filtrele. Excel değil, bu liste artık kaynak gerçeği.",
+        "alt": "Filtreler ve kalan gün sütunu ile varlık listesi"
+      },
+      "calendar": {
+        "eyebrow": "Takvim",
+        "title": "Yenileme takvimini görselleştir",
+        "body": "Yığılan son kullanma tarihlerini haftalar öncesinden gör. Yangın söndürmek yerine satınalmayı planla.",
+        "alt": "Yaklaşan yenilemelerin takvim görünümü"
+      },
+      "detail": {
+        "eyebrow": "Varlık detayı",
+        "title": "Her varlığa derinlemesine in",
+        "body": "Her varlığa özel sayfa: yenileme geçmişi, hatırlatma çizelgesi, sahip, satıcı, maliyet ve hızlı eylem kenar çubuğu.",
+        "alt": "Hızlı eylemler kenar çubuğu ile varlık detay sayfası"
+      },
+      "reminders": {
+        "eyebrow": "Hatırlatma politikaları",
+        "title": "Hatırlatma politikasını bir kez ayarla",
+        "body": "Kanalları, süreleri ve kitleyi seç. Sen değiştirene kadar aynı politika her yeni varlığa uygulanır.",
+        "alt": "Kanal toggle'larını gösteren bildirim ayarları"
+      },
+      "share": {
+        "eyebrow": "Paylaşım linkleri",
+        "title": "Erişim vermeden paylaş",
+        "body": "Tek varlığa SHA-256 hash'lı, isteğe bağlı süreli linkler oluştur. Alıcılar yalnızca yenileme bilgisini görür — lisans anahtarı, IP, proje detayı görünmez.",
+        "alt": "Tek seferlik token banner'ı ile paylaşım dialog'u"
+      }
+    },
+    "i18n": {
+      "heading": "Ekibinin dilini konuş",
+      "subheading": "RenewPilot İngilizce, Türkçe, Almanca, Fransızca ve İspanyolca olarak gelir — hem arayüz hem bildirimler."
+    },
+    "trust": {
+      "heading": "Verini düşünerek inşa edildi",
+      "subheading": "Güvenlik incelemesi gerektirmeyen mantıklı varsayılanlar.",
+      "encryption": {
+        "title": "Disk üzerinde şifreli",
+        "desc": "Aktarımda TLS ile PostgreSQL. Token'lar SHA-256 hash olarak saklanır."
+      },
+      "isolation": {
+        "title": "Sıkı organizasyon izolasyonu",
+        "desc": "Her sorgu organizasyonuna kapsamlandırılır. Çapraz tenant aramalar 403 değil 404 döner."
+      },
+      "hosting": {
+        "title": "AB merkezli altyapı",
+        "desc": "Vercel + Neon (Frankfurt) üzerinde çalışır. KVKK/GDPR uyumlu varsayılan veri işleme."
+      },
+      "audit": {
+        "title": "Denetime hazır",
+        "desc": "Her yenileme, davet ve erişim değişikliği loglanır ve dışa aktarılabilir."
+      }
+    },
+    "cta": {
+      "heading": "2 dakikadan az sürede yenileme takibine başla",
+      "subheading": "Bir workspace oluştur, ilk varlığını ekle, ilk hatırlatmanı al. Kart yok, kurulum görüşmesi yok.",
+      "emailPlaceholder": "sen@sirket.com",
+      "button": "Hesap oluştur",
+      "disclaimer": "Beta süresince ücretsiz. İstediğin zaman iptal — verin her zaman dışa aktarılabilir."
+    },
+    "footer": {
+      "tagline": "Kaçırılan tarihlerden bıkmış operatörlerin inşa ettiği yenileme takipçisi.",
+      "copyright": "Tüm hakları saklıdır.",
+      "beta": "Beta süresince ücretsiz",
+      "madeIn": "AB'de yapıldı",
+      "product": {
+        "title": "Ürün",
+        "features": "Özellikler",
+        "signIn": "Giriş yap",
+        "register": "Hesap oluştur"
+      },
+      "company": {
+        "title": "Şirket",
+        "about": "Hakkında",
+        "contact": "İletişim"
+      },
+      "legal": {
+        "title": "Yasal",
+        "terms": "Hizmet şartları",
+        "privacy": "Gizlilik politikası"
+      },
+      "resources": {
+        "title": "Kaynaklar",
+        "docs": "Dokümantasyon",
+        "status": "Sistem durumu"
+      }
+    }
+  },
   "publicShare": {
     "unavailableTitle": "Bağlantı kullanılamıyor",
     "unavailableDesc": "Bu paylaşım bağlantısı geçersiz, süresi dolmuş veya iptal edilmiş. Gönderenden yeni bir bağlantı isteyin.",

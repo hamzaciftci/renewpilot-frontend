@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Calendar mockup">
+  <rect width="1440" height="900" fill="#0a0a0b"/>
+  <rect x="0" y="0" width="220" height="900" fill="#111114"/>
+  <g fill="#3b82f6"><rect x="20" y="22" width="14" height="14" rx="3"/></g>
+  <text x="42" y="36" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">RenewPilot</text>
+  <g font-family="Inter, system-ui, sans-serif" font-size="12" fill="#9ca3af">
+    <text x="44" y="100">Dashboard</text>
+    <text x="44" y="138">Assets</text>
+    <rect x="14" y="150" width="192" height="32" rx="6" fill="#1f2937"/>
+    <text x="44" y="170" fill="#e5e7eb" font-weight="500">Calendar</text>
+    <text x="44" y="202">Renewals</text>
+    <text x="44" y="234">Reports</text>
+  </g>
+
+  <rect x="220" y="0" width="1220" height="56" fill="#0e0e10"/>
+  <line x1="220" y1="56" x2="1440" y2="56" stroke="#1f2937"/>
+  <text x="252" y="34" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600">Calendar</text>
+
+  <text x="252" y="98" fill="#e5e7eb" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">May 2026</text>
+  <g font-family="Inter, system-ui, sans-serif" font-size="11">
+    <rect x="1280" y="80" width="34" height="30" rx="6" fill="#1f2937"/>
+    <text x="1297" y="100" fill="#e5e7eb" text-anchor="middle">‹</text>
+    <rect x="1320" y="80" width="60" height="30" rx="6" fill="#1f2937"/>
+    <text x="1350" y="100" fill="#e5e7eb" text-anchor="middle">Today</text>
+  </g>
+
+  <!-- Day headers -->
+  <g font-family="Inter, system-ui, sans-serif" font-size="10" fill="#6b7280" font-weight="500">
+    <text x="332" y="148" text-anchor="middle">MON</text>
+    <text x="490" y="148" text-anchor="middle">TUE</text>
+    <text x="648" y="148" text-anchor="middle">WED</text>
+    <text x="806" y="148" text-anchor="middle">THU</text>
+    <text x="964" y="148" text-anchor="middle">FRI</text>
+    <text x="1122" y="148" text-anchor="middle">SAT</text>
+    <text x="1280" y="148" text-anchor="middle">SUN</text>
+  </g>
+
+  <!-- Calendar grid -->
+  <g stroke="#1f2937" stroke-width="1" fill="#111114">
+    <!-- Week 1 -->
+    <rect x="252" y="168" width="158" height="120" rx="0"/>
+    <rect x="410" y="168" width="158" height="120"/>
+    <rect x="568" y="168" width="158" height="120"/>
+    <rect x="726" y="168" width="158" height="120"/>
+    <rect x="884" y="168" width="158" height="120"/>
+    <rect x="1042" y="168" width="158" height="120"/>
+    <rect x="1200" y="168" width="180" height="120"/>
+    <!-- Week 2 -->
+    <rect x="252" y="288" width="158" height="120"/>
+    <rect x="410" y="288" width="158" height="120"/>
+    <rect x="568" y="288" width="158" height="120"/>
+    <rect x="726" y="288" width="158" height="120"/>
+    <rect x="884" y="288" width="158" height="120"/>
+    <rect x="1042" y="288" width="158" height="120"/>
+    <rect x="1200" y="288" width="180" height="120"/>
+    <!-- Week 3 -->
+    <rect x="252" y="408" width="158" height="120"/>
+    <rect x="410" y="408" width="158" height="120"/>
+    <rect x="568" y="408" width="158" height="120"/>
+    <rect x="726" y="408" width="158" height="120"/>
+    <rect x="884" y="408" width="158" height="120"/>
+    <rect x="1042" y="408" width="158" height="120"/>
+    <rect x="1200" y="408" width="180" height="120"/>
+    <!-- Week 4 -->
+    <rect x="252" y="528" width="158" height="120"/>
+    <rect x="410" y="528" width="158" height="120"/>
+    <rect x="568" y="528" width="158" height="120"/>
+    <rect x="726" y="528" width="158" height="120"/>
+    <rect x="884" y="528" width="158" height="120"/>
+    <rect x="1042" y="528" width="158" height="120"/>
+    <rect x="1200" y="528" width="180" height="120"/>
+    <!-- Week 5 -->
+    <rect x="252" y="648" width="158" height="120"/>
+    <rect x="410" y="648" width="158" height="120"/>
+    <rect x="568" y="648" width="158" height="120"/>
+    <rect x="726" y="648" width="158" height="120"/>
+    <rect x="884" y="648" width="158" height="120"/>
+    <rect x="1042" y="648" width="158" height="120"/>
+    <rect x="1200" y="648" width="180" height="120"/>
+  </g>
+
+  <!-- Day numbers and events -->
+  <g font-family="Inter, system-ui, sans-serif" font-size="11" fill="#6b7280">
+    <text x="266" y="184">27</text><text x="424" y="184">28</text><text x="582" y="184">29</text><text x="740" y="184">30</text>
+    <text x="898" y="184" fill="#e5e7eb" font-weight="600">1</text>
+    <text x="1056" y="184" fill="#e5e7eb">2</text>
+    <text x="1214" y="184" fill="#e5e7eb">3</text>
+
+    <text x="266" y="304" fill="#e5e7eb">4</text>
+    <text x="424" y="304" fill="#e5e7eb">5</text>
+    <text x="582" y="304" fill="#e5e7eb">6</text>
+    <text x="740" y="304" fill="#e5e7eb">7</text>
+    <text x="898" y="304" fill="#e5e7eb">8</text>
+    <text x="1056" y="304" fill="#e5e7eb">9</text>
+    <text x="1214" y="304" fill="#e5e7eb">10</text>
+
+    <text x="266" y="424" fill="#e5e7eb">11</text>
+    <text x="424" y="424" fill="#e5e7eb">12</text>
+    <text x="582" y="424" fill="#e5e7eb">13</text>
+    <text x="740" y="424" fill="#e5e7eb">14</text>
+    <text x="898" y="424" fill="#e5e7eb">15</text>
+    <text x="1056" y="424" fill="#e5e7eb">16</text>
+    <text x="1214" y="424" fill="#e5e7eb">17</text>
+
+    <text x="266" y="544" fill="#e5e7eb">18</text>
+    <text x="424" y="544" fill="#e5e7eb">19</text>
+    <text x="582" y="544" fill="#e5e7eb">20</text>
+    <text x="740" y="544" fill="#e5e7eb">21</text>
+    <text x="898" y="544" fill="#e5e7eb">22</text>
+    <text x="1056" y="544" fill="#e5e7eb">23</text>
+    <text x="1214" y="544" fill="#e5e7eb">24</text>
+
+    <text x="266" y="664" fill="#e5e7eb">25</text>
+    <text x="424" y="664" fill="#e5e7eb">26</text>
+    <text x="582" y="664" fill="#e5e7eb">27</text>
+    <text x="740" y="664" fill="#e5e7eb">28</text>
+    <text x="898" y="664" fill="#e5e7eb">29</text>
+    <text x="1056" y="664" fill="#e5e7eb">30</text>
+    <text x="1214" y="664" fill="#e5e7eb">31</text>
+  </g>
+
+  <!-- Today highlight -->
+  <circle cx="900" cy="180" r="11" fill="#3b82f6" opacity="0.2"/>
+
+  <!-- Events -->
+  <g font-family="Inter, system-ui, sans-serif" font-size="9" fill="#fff">
+    <rect x="260" y="324" width="142" height="20" rx="3" fill="#ef4444"/>
+    <text x="268" y="338">acme.com expires</text>
+
+    <rect x="264" y="362" width="138" height="20" rx="3" fill="#3b82f6"/>
+    <text x="272" y="376">Reminder: SSL in 7d</text>
+
+    <rect x="582" y="444" width="138" height="20" rx="3" fill="#f59e0b"/>
+    <text x="590" y="458">SSL renewal due</text>
+
+    <rect x="582" y="468" width="138" height="20" rx="3" fill="#3b82f6"/>
+    <text x="590" y="482">acme.dev</text>
+
+    <rect x="1056" y="568" width="138" height="20" rx="3" fill="#10b981"/>
+    <text x="1064" y="582">Linear seats renew</text>
+
+    <rect x="740" y="688" width="138" height="20" rx="3" fill="#10b981"/>
+    <text x="748" y="702">Vercel Pro</text>
+
+    <rect x="898" y="688" width="138" height="20" rx="3" fill="#10b981"/>
+    <text x="906" y="702">Notion · 8 seats</text>
+  </g>
+</svg>
