@@ -673,20 +673,11 @@ function Footer() {
             © {new Date().getFullYear()} RenewPilot · {t("landing.footer.copyright")}
           </p>
           <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <CreditCard className="w-3 h-3" />
-              {t("landing.footer.beta")}
-            </span>
+            <span>{t("landing.footer.beta")}</span>
             <span>·</span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              v1.0
-            </span>
+            <span className="font-mono">v1.0</span>
             <span>·</span>
-            <span className="flex items-center gap-1">
-              <SettingsIcon className="w-3 h-3" />
-              {t("landing.footer.madeIn")}
-            </span>
+            <span>{t("landing.footer.madeIn")}</span>
           </div>
         </div>
       </div>
